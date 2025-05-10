@@ -26,18 +26,18 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
     <>
       <DropdownMenuLabel className="p-0 font-normal">
         <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-          <UserInfo user={user} showEmail={true} />
+          <UserInfo showEmail={true} user={user} />
         </div>
       </DropdownMenuLabel>
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
         <DropdownMenuItem asChild>
           <Link
+            as="button"
             className="block w-full"
             href={route("profile.edit")}
-            as="button"
-            prefetch
             onClick={cleanup}
+            prefetch
           >
             <Settings className="mr-2" />
             Settings
@@ -47,10 +47,10 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
       <DropdownMenuSeparator />
       <DropdownMenuItem asChild>
         <Link
-          className="block w-full"
-          method="post"
-          href={route("logout")}
           as="button"
+          className="block w-full"
+          href={route("logout")}
+          method="post"
           onClick={handleLogout}
         >
           <LogOut className="mr-2" />

@@ -63,13 +63,13 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
           <div className="lg:hidden">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="mr-2 h-[34px] w-[34px]">
+                <Button className="mr-2 h-[34px] w-[34px]" size="icon" variant="ghost">
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
               <SheetContent
-                side="left"
                 className="bg-sidebar flex h-full w-64 flex-col items-stretch justify-between"
+                side="left"
               >
                 <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
                 <SheetHeader className="flex justify-start text-left">
@@ -80,11 +80,11 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                     <div className="flex flex-col space-y-4">
                       {mainNavItems.map((item) => (
                         <Link
-                          key={item.title}
-                          href={item.href}
                           className="flex items-center space-x-2 font-medium"
+                          href={item.href}
+                          key={item.title}
                         >
-                          {item.icon && <Icon iconNode={item.icon} className="h-5 w-5" />}
+                          {item.icon && <Icon className="h-5 w-5" iconNode={item.icon} />}
                           <span>{item.title}</span>
                         </Link>
                       ))}
@@ -93,13 +93,13 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                     <div className="flex flex-col space-y-4">
                       {rightNavItems.map((item) => (
                         <a
-                          key={item.title}
-                          href={item.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
                           className="flex items-center space-x-2 font-medium"
+                          href={item.href}
+                          key={item.title}
+                          rel="noopener noreferrer"
+                          target="_blank"
                         >
-                          {item.icon && <Icon iconNode={item.icon} className="h-5 w-5" />}
+                          {item.icon && <Icon className="h-5 w-5" iconNode={item.icon} />}
                           <span>{item.title}</span>
                         </a>
                       ))}
@@ -110,7 +110,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
             </Sheet>
           </div>
 
-          <Link href="/dashboard" prefetch className="flex items-center space-x-2">
+          <Link className="flex items-center space-x-2" href="/dashboard" prefetch>
             <AppLogo />
           </Link>
 
@@ -119,20 +119,20 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
             <NavigationMenu className="flex h-full items-stretch">
               <NavigationMenuList className="flex h-full items-stretch space-x-2">
                 {mainNavItems.map((item, index) => (
-                  <NavigationMenuItem key={index} className="relative flex h-full items-center">
+                  <NavigationMenuItem className="relative flex h-full items-center" key={index}>
                     <Link
-                      href={item.href}
                       className={cn(
                         navigationMenuTriggerStyle(),
                         page.url === item.href && activeItemStyles,
                         "h-9 cursor-pointer px-3",
                       )}
+                      href={item.href}
                     >
-                      {item.icon && <Icon iconNode={item.icon} className="mr-2 h-4 w-4" />}
+                      {item.icon && <Icon className="mr-2 h-4 w-4" iconNode={item.icon} />}
                       {item.title}
                     </Link>
                     {page.url === item.href && (
-                      <div className="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-black dark:bg-white"></div>
+                      <div className="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-black dark:bg-white" />
                     )}
                   </NavigationMenuItem>
                 ))}
@@ -142,25 +142,25 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
 
           <div className="ml-auto flex items-center space-x-2">
             <div className="relative flex items-center space-x-1">
-              <Button variant="ghost" size="icon" className="group h-9 w-9 cursor-pointer">
+              <Button className="group h-9 w-9 cursor-pointer" size="icon" variant="ghost">
                 <Search className="!size-5 opacity-80 group-hover:opacity-100" />
               </Button>
               <div className="hidden lg:flex">
                 {rightNavItems.map((item) => (
-                  <TooltipProvider key={item.title} delayDuration={0}>
+                  <TooltipProvider delayDuration={0} key={item.title}>
                     <Tooltip>
                       <TooltipTrigger>
                         <a
-                          href={item.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
                           className="group text-accent-foreground ring-offset-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring ml-1 inline-flex h-9 w-9 items-center justify-center rounded-md bg-transparent p-0 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
+                          href={item.href}
+                          rel="noopener noreferrer"
+                          target="_blank"
                         >
                           <span className="sr-only">{item.title}</span>
                           {item.icon && (
                             <Icon
-                              iconNode={item.icon}
                               className="size-5 opacity-80 group-hover:opacity-100"
+                              iconNode={item.icon}
                             />
                           )}
                         </a>
@@ -175,16 +175,16 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="size-10 rounded-full p-1">
+                <Button className="size-10 rounded-full p-1" variant="ghost">
                   <Avatar className="size-8 overflow-hidden rounded-full">
-                    <AvatarImage src={auth.user.avatar} alt={auth.user.name} />
+                    <AvatarImage alt={auth.user.name} src={auth.user.avatar} />
                     <AvatarFallback className="rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
                       {getInitials(auth.user.name)}
                     </AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end">
+              <DropdownMenuContent align="end" className="w-56">
                 <UserMenuContent user={auth.user} />
               </DropdownMenuContent>
             </DropdownMenu>

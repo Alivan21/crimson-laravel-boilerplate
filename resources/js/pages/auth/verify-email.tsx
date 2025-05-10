@@ -18,8 +18,8 @@ export default function VerifyEmail({ status }: { status?: string }) {
 
   return (
     <AuthLayout
-      title="Verify email"
       description="Please verify your email address by clicking on the link we just emailed to you."
+      title="Verify email"
     >
       <Head title="Email verification" />
 
@@ -30,13 +30,13 @@ export default function VerifyEmail({ status }: { status?: string }) {
         </div>
       )}
 
-      <form onSubmit={submit} className="space-y-6 text-center">
+      <form className="space-y-6 text-center" onSubmit={submit}>
         <Button disabled={processing} variant="secondary">
           {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
           Resend verification email
         </Button>
 
-        <TextLink href={route("logout")} method="post" className="mx-auto block text-sm">
+        <TextLink className="mx-auto block text-sm" href={route("logout")} method="post">
           Log out
         </TextLink>
       </form>

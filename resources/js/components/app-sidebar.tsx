@@ -42,7 +42,7 @@ export function AppSidebar() {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
+            <SidebarMenuButton asChild size="lg">
               <Link href="/dashboard" prefetch>
                 <AppLogo />
               </Link>
@@ -56,7 +56,7 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter>
-        <NavFooter items={footerNavItems} className="mt-auto" />
+        <NavFooter className="mt-auto" items={footerNavItems} />
         <NavUser />
       </SidebarFooter>
     </Sidebar>

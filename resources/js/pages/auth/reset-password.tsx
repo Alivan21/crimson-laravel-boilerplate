@@ -36,7 +36,7 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
   };
 
   return (
-    <AuthLayout title="Reset password" description="Please enter your new password below">
+    <AuthLayout description="Please enter your new password below" title="Reset password">
       <Head title="Reset password" />
 
       <form onSubmit={submit}>
@@ -44,30 +44,29 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input
-              id="email"
-              type="email"
-              name="email"
               autoComplete="email"
-              value={data.email}
               className="mt-1 block w-full"
-              readOnly
+              id="email"
+              name="email"
               onChange={(e) => setData("email", e.target.value)}
+              readOnly
+              type="email"
+              value={data.email}
             />
-            <InputError message={errors.email} className="mt-2" />
+            <InputError className="mt-2" message={errors.email} />
           </div>
 
           <div className="grid gap-2">
             <Label htmlFor="password">Password</Label>
             <Input
-              id="password"
-              type="password"
-              name="password"
               autoComplete="new-password"
-              value={data.password}
               className="mt-1 block w-full"
-              autoFocus
+              id="password"
+              name="password"
               onChange={(e) => setData("password", e.target.value)}
               placeholder="Password"
+              type="password"
+              value={data.password}
             />
             <InputError message={errors.password} />
           </div>
@@ -75,19 +74,19 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
           <div className="grid gap-2">
             <Label htmlFor="password_confirmation">Confirm password</Label>
             <Input
-              id="password_confirmation"
-              type="password"
-              name="password_confirmation"
               autoComplete="new-password"
-              value={data.password_confirmation}
               className="mt-1 block w-full"
+              id="password_confirmation"
+              name="password_confirmation"
               onChange={(e) => setData("password_confirmation", e.target.value)}
               placeholder="Confirm password"
+              type="password"
+              value={data.password_confirmation}
             />
-            <InputError message={errors.password_confirmation} className="mt-2" />
+            <InputError className="mt-2" message={errors.password_confirmation} />
           </div>
 
-          <Button type="submit" className="mt-4 w-full" disabled={processing}>
+          <Button className="mt-4 w-full" disabled={processing} type="submit">
             {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
             Reset password
           </Button>
