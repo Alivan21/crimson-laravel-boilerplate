@@ -34,7 +34,7 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
         <DropdownMenuItem asChild>
           <Link
             as="button"
-            className="block w-full"
+            className="block w-full cursor-pointer"
             href={route("profile.edit")}
             onClick={cleanup}
             prefetch
@@ -48,7 +48,7 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
       <DropdownMenuItem asChild>
         <Link
           as="button"
-          className="block w-full"
+          className="block w-full cursor-pointer"
           href={route("logout")}
           method="post"
           onClick={handleLogout}

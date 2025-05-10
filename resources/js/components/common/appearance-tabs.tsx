@@ -1,12 +1,13 @@
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Appearance, useAppearance } from "@/hooks/use-appearance";
 import { cn } from "@/lib/utils";
+import * as TabsPrimitive from "@radix-ui/react-tabs";
 import { LucideIcon, Monitor, Moon, Sun } from "lucide-react";
-import { HTMLAttributes } from "react";
 
 export default function AppearanceToggleTab({
   className = "",
   ...props
-}: HTMLAttributes<HTMLDivElement>) {
+}: React.ComponentProps<typeof TabsPrimitive.Root>) {
   const { appearance, updateAppearance } = useAppearance();
 
   const tabs: { value: Appearance; icon: LucideIcon; label: string }[] = [
@@ -16,28 +17,28 @@ export default function AppearanceToggleTab({
   ];
 
   return (
-    <div
-      className={cn(
-        "inline-flex gap-1 rounded-lg bg-neutral-100 p-1 dark:bg-neutral-800",
-        className,
-      )}
+    <Tabs
+      className={className}
+      onValueChange={updateAppearance as (value: string) => void}
+      value={appearance}
       {...props}
     >
-      {tabs.map(({ value, icon: Icon, label }) => (
-        <button
-          className={cn(
-            "flex items-center rounded-md px-3.5 py-1.5 transition-colors",
-            appearance === value
-              ? "bg-white shadow-xs dark:bg-neutral-700 dark:text-neutral-100"
-              : "text-neutral-500 hover:bg-neutral-200/60 hover:text-black dark:text-neutral-400 dark:hover:bg-neutral-700/60",
-          )}
-          key={value}
-          onClick={() => updateAppearance(value)}
-        >
-          <Icon className="-ml-1 h-4 w-4" />
-          <span className="ml-1.5 text-sm">{label}</span>
-        </button>
-      ))}
-    </div>
+      <TabsList className="bg-neutral-100 dark:bg-neutral-800">
+        {tabs.map(({ value, icon: Icon, label }) => (
+          <TabsTrigger
+            className={cn(
+              "flex items-center data-[state=active]:bg-white dark:data-[state=active]:bg-neutral-700 dark:data-[state=active]:text-neutral-100",
+              "data-[state=inactive]:text-neutral-500 dark:data-[state=inactive]:text-neutral-400",
+              "hover:bg-neutral-200/60 hover:text-black dark:hover:bg-neutral-700/60",
+            )}
+            key={value}
+            value={value}
+          >
+            <Icon className="mr-1.5 h-4 w-4" />
+            <span className="text-sm">{label}</span>
+          </TabsTrigger>
+        ))}
+      </TabsList>
+    </Tabs>
   );
 }
