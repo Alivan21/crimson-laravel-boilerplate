@@ -4,10 +4,8 @@ import { FormEventHandler } from "react";
 
 import HeadingSmall from "@/components/common/heading-small";
 import DeleteUser from "@/components/delete-user";
-import InputError from "@/components/forms/input-error";
+import { FormInput } from "@/components/forms/input";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import AppLayout from "@/layouts/app-layout";
 import SettingsLayout from "@/layouts/settings/layout";
 import { ROUTES } from "@/routes";
@@ -57,38 +55,29 @@ export default function Profile({ must_verify_email, status }: ProfileProps) {
           />
 
           <form className="space-y-6" onSubmit={submit}>
-            <div className="grid gap-2">
-              <Label htmlFor="name">Name</Label>
+            <FormInput
+              autoComplete="name"
+              error={errors.name}
+              id="name"
+              label="Name"
+              onChange={(value) => setData("name", value)}
+              placeholder="Full name"
+              required
+              type="text"
+              value={data.name}
+            />
 
-              <Input
-                autoComplete="name"
-                className="mt-1 block w-full"
-                id="name"
-                onChange={(e) => setData("name", e.target.value)}
-                placeholder="Full name"
-                required
-                value={data.name}
-              />
-
-              <InputError className="mt-2" message={errors.name} />
-            </div>
-
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email address</Label>
-
-              <Input
-                autoComplete="username"
-                className="mt-1 block w-full"
-                id="email"
-                onChange={(e) => setData("email", e.target.value)}
-                placeholder="Email address"
-                required
-                type="email"
-                value={data.email}
-              />
-
-              <InputError className="mt-2" message={errors.email} />
-            </div>
+            <FormInput
+              autoComplete="username"
+              error={errors.email}
+              id="email"
+              label="Email address"
+              onChange={(value) => setData("email", value)}
+              placeholder="Email address"
+              required
+              type="email"
+              value={data.email}
+            />
 
             {must_verify_email && auth.user.email_verified_at === null && (
               <div>
@@ -113,7 +102,9 @@ export default function Profile({ must_verify_email, status }: ProfileProps) {
             )}
 
             <div className="flex items-center gap-4">
-              <Button disabled={processing}>Save</Button>
+              <Button disabled={processing} type="submit">
+                Save
+              </Button>
 
               <Transition
                 enter="transition ease-in-out"
@@ -122,13 +113,20 @@ export default function Profile({ must_verify_email, status }: ProfileProps) {
                 leaveTo="opacity-0"
                 show={recentlySuccessful}
               >
-                <p className="text-sm text-neutral-600">Saved</p>
+                <p className="text-muted-foreground text-sm">Saved.</p>
               </Transition>
             </div>
           </form>
         </div>
 
-        <DeleteUser />
+        <div className="mt-10 space-y-6">
+          <HeadingSmall
+            description="Once your account is deleted, all of its resources and data will be permanently deleted."
+            title="Delete Account"
+          />
+
+          <DeleteUser />
+        </div>
       </SettingsLayout>
     </AppLayout>
   );

@@ -3,10 +3,8 @@ import { LoaderCircle } from "lucide-react";
 import { FormEventHandler } from "react";
 
 import TextLink from "@/components/common/text-link";
-import InputError from "@/components/forms/input-error";
+import { FormInput } from "@/components/forms/input";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import AuthLayout from "@/layouts/auth-layout";
 import { ROUTES } from "@/routes";
 import { TRegisterForm } from "@/types/modules/auth";
@@ -34,65 +32,53 @@ export default function Register() {
       <Head title="Register" />
       <form className="flex flex-col gap-6" onSubmit={submit}>
         <div className="grid gap-6">
-          <div className="grid gap-2">
-            <Label htmlFor="name">Name</Label>
-            <Input
-              autoComplete="name"
-              disabled={processing}
-              id="name"
-              onChange={(e) => setData("name", e.target.value)}
-              placeholder="Full name"
-              required
-              type="text"
-              value={data.name}
-            />
-            <InputError className="mt-2" message={errors.name} />
-          </div>
+          <FormInput
+            autoComplete="name"
+            error={errors.name}
+            id="name"
+            label="Name"
+            onChange={(value) => setData("name", value)}
+            placeholder="Full name"
+            required
+            type="text"
+            value={data.name}
+          />
 
-          <div className="grid gap-2">
-            <Label htmlFor="email">Email address</Label>
-            <Input
-              autoComplete="email"
-              disabled={processing}
-              id="email"
-              onChange={(e) => setData("email", e.target.value)}
-              placeholder="email@example.com"
-              required
-              type="email"
-              value={data.email}
-            />
-            <InputError message={errors.email} />
-          </div>
+          <FormInput
+            autoComplete="email"
+            error={errors.email}
+            id="email"
+            label="Email address"
+            onChange={(value) => setData("email", value)}
+            placeholder="email@example.com"
+            required
+            type="email"
+            value={data.email}
+          />
 
-          <div className="grid gap-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              autoComplete="new-password"
-              disabled={processing}
-              id="password"
-              onChange={(e) => setData("password", e.target.value)}
-              placeholder="Password"
-              required
-              type="password"
-              value={data.password}
-            />
-            <InputError message={errors.password} />
-          </div>
+          <FormInput
+            autoComplete="new-password"
+            error={errors.password}
+            id="password"
+            label="Password"
+            onChange={(value) => setData("password", value)}
+            placeholder="Password"
+            required
+            type="password"
+            value={data.password}
+          />
 
-          <div className="grid gap-2">
-            <Label htmlFor="password_confirmation">Confirm password</Label>
-            <Input
-              autoComplete="new-password"
-              disabled={processing}
-              id="password_confirmation"
-              onChange={(e) => setData("password_confirmation", e.target.value)}
-              placeholder="Confirm password"
-              required
-              type="password"
-              value={data.password_confirmation}
-            />
-            <InputError message={errors.password_confirmation} />
-          </div>
+          <FormInput
+            autoComplete="new-password"
+            error={errors.password_confirmation}
+            id="password_confirmation"
+            label="Confirm Password"
+            onChange={(value) => setData("password_confirmation", value)}
+            placeholder="Confirm password"
+            required
+            type="password"
+            value={data.password_confirmation}
+          />
 
           <Button className="mt-2 w-full" disabled={processing} type="submit">
             {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}

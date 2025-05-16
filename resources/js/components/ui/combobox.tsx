@@ -72,6 +72,8 @@ interface ComboboxProps {
     "value" | "placeholder" | "disabled"
   >;
   ref?: React.Ref<ComboboxRef>;
+  /** The id of the combobox input */
+  id?: string;
 }
 
 export interface ComboboxRef {
@@ -150,6 +152,7 @@ function Combobox({
   commandProps,
   inputProps,
   ref,
+  id,
 }: ComboboxProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -394,6 +397,7 @@ function Combobox({
           disabled && "cursor-not-allowed opacity-50",
           className
         )}
+        id={id}
         onClick={handleButtonClick}
         ref={buttonRef}
       >

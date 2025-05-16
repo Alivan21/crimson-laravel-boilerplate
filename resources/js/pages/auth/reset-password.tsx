@@ -2,13 +2,12 @@ import { Head, useForm } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
 import { FormEventHandler } from "react";
 
-import InputError from "@/components/forms/input-error";
+import { FormInput } from "@/components/forms/input";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import AuthLayout from "@/layouts/auth-layout";
 import { ROUTES } from "@/routes";
 import { TResetPasswordForm } from "@/types/modules/auth";
+
 interface ResetPasswordProps {
   token: string;
   email: string;
@@ -16,8 +15,8 @@ interface ResetPasswordProps {
 
 export default function ResetPassword({ token, email }: ResetPasswordProps) {
   const { data, setData, post, processing, errors, reset } = useForm<Required<TResetPasswordForm>>({
-    token: token,
-    email: email,
+    token,
+    email,
     password: "",
     password_confirmation: "",
   });
@@ -30,61 +29,51 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
   };
 
   return (
-    <AuthLayout description="Please enter your new password below" title="Reset password">
-      <Head title="Reset password" />
-
-      <form onSubmit={submit}>
+    <AuthLayout description="Enter your new password below" title="Reset password">
+      <Head title="Reset Password" />
+      <form className="flex flex-col gap-6" onSubmit={submit}>
         <div className="grid gap-6">
-          <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              autoComplete="email"
-              className="mt-1 block w-full"
-              id="email"
-              name="email"
-              onChange={(e) => setData("email", e.target.value)}
-              readOnly
-              type="email"
-              value={data.email}
-            />
-            <InputError className="mt-2" message={errors.email} />
-          </div>
+          <FormInput
+            autoComplete="username"
+            error={errors.email}
+            id="email"
+            label="Email address"
+            onChange={(value) => setData("email", value)}
+            placeholder="Email address"
+            required
+            type="email"
+            value={data.email}
+          />
 
-          <div className="grid gap-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              autoComplete="new-password"
-              className="mt-1 block w-full"
-              id="password"
-              name="password"
-              onChange={(e) => setData("password", e.target.value)}
-              placeholder="Password"
-              type="password"
-              value={data.password}
-            />
-            <InputError message={errors.password} />
-          </div>
+          <FormInput
+            autoComplete="new-password"
+            error={errors.password}
+            id="password"
+            label="Password"
+            onChange={(value) => setData("password", value)}
+            placeholder="New password"
+            required
+            type="password"
+            value={data.password}
+          />
 
-          <div className="grid gap-2">
-            <Label htmlFor="password_confirmation">Confirm password</Label>
-            <Input
-              autoComplete="new-password"
-              className="mt-1 block w-full"
-              id="password_confirmation"
-              name="password_confirmation"
-              onChange={(e) => setData("password_confirmation", e.target.value)}
-              placeholder="Confirm password"
-              type="password"
-              value={data.password_confirmation}
-            />
-            <InputError className="mt-2" message={errors.password_confirmation} />
-          </div>
-
-          <Button className="mt-4 w-full" disabled={processing} type="submit">
-            {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-            Reset password
-          </Button>
+          <FormInput
+            autoComplete="new-password"
+            error={errors.password_confirmation}
+            id="password_confirmation"
+            label="Confirm Password"
+            onChange={(value) => setData("password_confirmation", value)}
+            placeholder="Confirm password"
+            required
+            type="password"
+            value={data.password_confirmation}
+          />
         </div>
+
+        <Button disabled={processing} type="submit">
+          {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
+          Reset Password
+        </Button>
       </form>
     </AuthLayout>
   );

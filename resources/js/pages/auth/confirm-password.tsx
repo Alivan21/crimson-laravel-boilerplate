@@ -2,12 +2,11 @@ import { Head, useForm } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
 import { FormEventHandler } from "react";
 
-import InputError from "@/components/forms/input-error";
+import { FormInput } from "@/components/forms/input";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import AuthLayout from "@/layouts/auth-layout";
 import { ROUTES } from "@/routes";
+
 export default function ConfirmPassword() {
   const { data, setData, post, processing, errors, reset } = useForm<
     Required<{ password: string }>
@@ -30,26 +29,23 @@ export default function ConfirmPassword() {
     >
       <Head title="Confirm password" />
 
-      <form onSubmit={submit}>
+      <form className="flex flex-col gap-6" onSubmit={submit}>
         <div className="space-y-6">
-          <div className="grid gap-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              autoComplete="current-password"
-              id="password"
-              name="password"
-              onChange={(e) => setData("password", e.target.value)}
-              placeholder="Password"
-              type="password"
-              value={data.password}
-            />
-
-            <InputError message={errors.password} />
-          </div>
+          <FormInput
+            autoComplete="current-password"
+            error={errors.password}
+            id="password"
+            label="Password"
+            onChange={(value) => setData("password", value)}
+            placeholder="Password"
+            required
+            type="password"
+            value={data.password}
+          />
 
           <div className="flex items-center">
-            <Button className="w-full" disabled={processing}>
-              {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
+            <Button className="w-full" disabled={processing} type="submit">
+              {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
               Confirm password
             </Button>
           </div>
