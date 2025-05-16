@@ -15,21 +15,21 @@ export const ROUTES = {
       APPEARANCE: "admin.appearance",
     },
   },
-  REGISTER: "register",
-  LOGIN: "login",
-  LOGOUT: "logout",
-  PASSWORD: {
-    REQUEST: "password.request",
-    EMAIL: "password.email",
-    RESET: "password.reset",
-    STORE: "password.store",
-    CONFIRM: "password.confirm",
-    UPDATE: "password.update",
-    EDIT: "password.edit",
-  },
-  VERIFICATION: {
-    NOTICE: "verification.notice",
-    VERIFY: "verification.verify",
-    SEND: "verification.send",
+  AUTH: {
+    REGISTER: "register",
+    LOGIN: "login",
+    LOGOUT: "logout",
+    PASSWORD: {
+      REQUEST: "password.request",
+      EMAIL: "password.email",
+      RESET: "password.reset",
+      STORE: "password.store",
+      CONFIRM: "password.confirm",
+    },
+    VERIFICATION: {
+      NOTICE: "verification.notice",
+      VERIFY: "verification.verify",
+      SEND: "verification.send",
+    },
   },
 };

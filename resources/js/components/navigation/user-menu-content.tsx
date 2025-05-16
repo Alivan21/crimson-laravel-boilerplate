@@ -6,6 +6,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { useMobileNavigation } from "@/hooks/shared/use-mobile-navigation";
+import { ROUTES } from "@/routes";
 import { type IUser } from "@/types/shared";
 import { Link, router } from "@inertiajs/react";
 import { LogOut, Settings } from "lucide-react";
@@ -35,7 +36,7 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
           <Link
             as="button"
             className="block w-full cursor-pointer"
-            href={route("profile.edit")}
+            href={route(ROUTES.ADMIN.SETTINGS.PROFILE.EDIT)}
             onClick={cleanup}
             prefetch
           >

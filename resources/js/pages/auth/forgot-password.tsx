@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import AuthLayout from "@/layouts/auth-layout";
-
+import { ROUTES } from "@/routes";
 interface ForgotPasswordProps {
   status?: string;
 }
@@ -21,7 +21,7 @@ export default function ForgotPassword({ status }: ForgotPasswordProps) {
   const submit: FormEventHandler = (e) => {
     e.preventDefault();
 
-    post(route("password.email"));
+    post(route(ROUTES.AUTH.PASSWORD.EMAIL));
   };
 
   return (

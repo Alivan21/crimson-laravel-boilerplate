@@ -10,6 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { ROUTES } from "@/routes";
 import { type INavItem } from "@/types/shared/navigation";
 import { Link } from "@inertiajs/react";
 import { BookOpen, Folder, LayoutGrid } from "lucide-react";
@@ -18,7 +19,7 @@ import AppLogo from "../icons/app-logo";
 const mainNavItems: INavItem[] = [
   {
     title: "Dashboard",
-    href: "/dashboard",
+    href: route(ROUTES.ADMIN.DASHBOARD),
     icon: LayoutGrid,
   },
 ];
@@ -43,7 +44,7 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild size="lg">
-              <Link href="/dashboard" prefetch>
+              <Link href={route(ROUTES.ADMIN.DASHBOARD)} prefetch>
                 <AppLogo />
               </Link>
             </SidebarMenuButton>

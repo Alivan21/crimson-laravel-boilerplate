@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import AppLayout from "@/layouts/app-layout";
 import SettingsLayout from "@/layouts/settings/layout";
+import { ROUTES } from "@/routes";
 import { TProfileForm } from "@/types/modules/admin/settings";
 import { ISharedData } from "@/types/shared";
 import { IBreadcrumbItem } from "@/types/shared/navigation";
@@ -39,7 +40,7 @@ export default function Profile({ must_verify_email, status }: ProfileProps) {
   const submit: FormEventHandler = (e) => {
     e.preventDefault();
 
-    patch(route("profile.update"), {
+    patch(route(ROUTES.ADMIN.SETTINGS.PROFILE.UPDATE), {
       preserveScroll: true,
     });
   };

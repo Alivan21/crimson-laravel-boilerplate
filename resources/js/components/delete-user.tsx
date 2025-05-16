@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ROUTES } from "@/routes";
 
 export default function DeleteUser() {
   const passwordInput = useRef<HTMLInputElement>(null);
@@ -31,7 +32,7 @@ export default function DeleteUser() {
   const deleteUser: FormEventHandler = (e) => {
     e.preventDefault();
 
-    destroy(route("profile.destroy"), {
+    destroy(route(ROUTES.ADMIN.SETTINGS.PROFILE.DESTROY), {
       preserveScroll: true,
       onSuccess: () => closeModal(),
       onError: () => passwordInput.current?.focus(),

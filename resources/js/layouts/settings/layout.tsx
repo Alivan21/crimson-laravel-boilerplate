@@ -2,6 +2,7 @@ import Heading from "@/components/common/heading";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/libs/clsx";
+import { ROUTES } from "@/routes";
 import { type INavItem } from "@/types/shared/navigation";
 import { Link } from "@inertiajs/react";
 import { type PropsWithChildren } from "react";
@@ -9,17 +10,17 @@ import { type PropsWithChildren } from "react";
 const sidebarNavItems: INavItem[] = [
   {
     title: "Profile",
-    href: "/settings/profile",
+    href: route(ROUTES.ADMIN.SETTINGS.PROFILE.EDIT),
     icon: null,
   },
   {
     title: "Password",
-    href: "/settings/password",
+    href: route(ROUTES.ADMIN.SETTINGS.PASSWORD.EDIT),
     icon: null,
   },
   {
     title: "Appearance",
-    href: "/settings/appearance",
+    href: route(ROUTES.ADMIN.SETTINGS.APPEARANCE),
     icon: null,
   },
 ];

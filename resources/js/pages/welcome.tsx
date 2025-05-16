@@ -1,3 +1,4 @@
+import { ROUTES } from "@/routes";
 import { type ISharedData } from "@/types/shared";
 import { Head, Link, usePage } from "@inertiajs/react";
 
@@ -19,7 +20,7 @@ export default function Welcome() {
             {auth.user ? (
               <Link
                 className="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
-                href={route("dashboard")}
+                href={route(ROUTES.ADMIN.DASHBOARD)}
               >
                 Dashboard
               </Link>
@@ -27,13 +28,13 @@ export default function Welcome() {
               <>
                 <Link
                   className="inline-block rounded-sm border border-transparent px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#19140035] dark:text-[#EDEDEC] dark:hover:border-[#3E3E3A]"
-                  href={route("login")}
+                  href={route(ROUTES.AUTH.LOGIN)}
                 >
                   Log in
                 </Link>
                 <Link
                   className="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
-                  href={route("register")}
+                  href={route(ROUTES.AUTH.REGISTER)}
                 >
                   Register
                 </Link>

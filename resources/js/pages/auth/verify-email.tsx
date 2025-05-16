@@ -5,7 +5,7 @@ import { FormEventHandler } from "react";
 import TextLink from "@/components/common/text-link";
 import { Button } from "@/components/ui/button";
 import AuthLayout from "@/layouts/auth-layout";
-
+import { ROUTES } from "@/routes";
 interface VerifyEmailProps {
   status?: string;
 }
@@ -16,7 +16,7 @@ export default function VerifyEmail({ status }: VerifyEmailProps) {
   const submit: FormEventHandler = (e) => {
     e.preventDefault();
 
-    post(route("verification.send"));
+    post(route(ROUTES.AUTH.VERIFICATION.SEND));
   };
 
   return (
