@@ -10,6 +10,7 @@ import useDebouncedSearch from "@/hooks/data-table/use-debounce-search";
 import useSorting from "@/hooks/data-table/use-sorting";
 import { ITableParams } from "@/types/shared";
 import * as React from "react";
+import { type FilterableColumn } from "./filter";
 import { DataTablePagination } from "./pagination";
 import { DataTableSortHeader } from "./sort-header";
 import { DataTableToolbar } from "./toolbar";
@@ -30,6 +31,7 @@ interface DataTableProps<TData> {
   searchKey?: string;
   total: number;
   lastPage: number;
+  filterComponents?: FilterableColumn[];
 }
 
 export function DataTable<TData>({
@@ -40,6 +42,7 @@ export function DataTable<TData>({
   searchKey = "search",
   total,
   lastPage,
+  filterComponents,
 }: DataTableProps<TData>) {
   const { params, setParams } = useDebouncedSearch(route(route().current()!), initialParams);
   const { sort } = useSorting((params) => {
@@ -52,6 +55,7 @@ export function DataTable<TData>({
   return (
     <div className="space-y-4">
       <DataTableToolbar
+        filterComponents={filterComponents}
         params={params}
         searchKey={searchKey}
         searchPlaceholder={searchPlaceholder}
