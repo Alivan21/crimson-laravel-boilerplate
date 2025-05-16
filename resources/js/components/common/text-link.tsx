@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/libs/clsx";
 import { Link } from "@inertiajs/react";
 import { ComponentProps } from "react";
 

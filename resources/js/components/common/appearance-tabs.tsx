@@ -1,6 +1,6 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Appearance, useAppearance } from "@/hooks/use-appearance";
-import { cn } from "@/lib/utils";
+import { cn } from "@/libs/clsx";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import { LucideIcon, Monitor, Moon, Sun } from "lucide-react";
 

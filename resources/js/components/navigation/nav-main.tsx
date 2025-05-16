@@ -5,7 +5,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { type INavItem } from "@/types/common/navigation";
+import { type INavItem } from "@/types/shared/navigation";
 import { Link, usePage } from "@inertiajs/react";
 
 export function NavMain({ items = [] }: { items: INavItem[] }) {

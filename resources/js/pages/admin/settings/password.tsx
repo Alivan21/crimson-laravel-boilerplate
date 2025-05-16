@@ -1,7 +1,7 @@
 import InputError from "@/components/forms/input-error";
 import AppLayout from "@/layouts/app-layout";
 import SettingsLayout from "@/layouts/settings/layout";
-import { type IBreadcrumbItem } from "@/types/common/navigation";
+import { type IBreadcrumbItem } from "@/types/shared/navigation";
 import { Transition } from "@headlessui/react";
 import { Head, useForm } from "@inertiajs/react";
 import { FormEventHandler, useRef } from "react";

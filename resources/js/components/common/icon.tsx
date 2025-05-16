@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/libs/clsx";
 import { type LucideProps } from "lucide-react";
 import { type ComponentType } from "react";
 

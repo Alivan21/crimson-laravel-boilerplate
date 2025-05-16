@@ -6,7 +6,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { type INavItem } from "@/types/common/navigation";
+import { type INavItem } from "@/types/shared/navigation";
 import { type ComponentPropsWithoutRef } from "react";
 
 interface NavFooterProps {

@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import AuthLayout from "@/layouts/auth-layout";
 import { ROUTES } from "@/routes";
-import { TLoginForm } from "@/types/api/auth";
+import { TLoginForm } from "@/types/modules/auth";
 
 interface LoginProps {
   status?: string;

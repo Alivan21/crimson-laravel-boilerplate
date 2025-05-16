@@ -6,7 +6,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { useMobileNavigation } from "@/hooks/use-mobile-navigation";
-import { type IUser } from "@/types/api/user";
+import { type IUser } from "@/types/shared";
 import { Link, router } from "@inertiajs/react";
 import { LogOut, Settings } from "lucide-react";
 

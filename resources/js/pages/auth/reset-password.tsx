@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import AuthLayout from "@/layouts/auth-layout";
-import { TResetPasswordForm } from "@/types/api/auth";
+import { TResetPasswordForm } from "@/types/modules/auth";
 interface ResetPasswordProps {
   token: string;
   email: string;

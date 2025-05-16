@@ -10,8 +10,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import AppLayout from "@/layouts/app-layout";
 import SettingsLayout from "@/layouts/settings/layout";
-import { ISharedData } from "@/types/common";
-import { IBreadcrumbItem } from "@/types/common/navigation";
+import { TProfileForm } from "@/types/modules/admin/settings";
+import { ISharedData } from "@/types/shared";
+import { IBreadcrumbItem } from "@/types/shared/navigation";
 
 const breadcrumbs: IBreadcrumbItem[] = [
   {
@@ -20,22 +21,16 @@ const breadcrumbs: IBreadcrumbItem[] = [
   },
 ];
 
-type ProfileForm = {
-  name: string;
-  email: string;
-};
-
-export default function Profile({
-  must_verify_email,
-  status,
-}: {
+interface ProfileProps {
   must_verify_email: boolean;
   status?: string;
-}) {
+}
+
+export default function Profile({ must_verify_email, status }: ProfileProps) {
   const { auth } = usePage<ISharedData>().props;
 
   const { data, setData, patch, errors, processing, recentlySuccessful } = useForm<
-    Required<ProfileForm>
+    Required<TProfileForm>
   >({
     name: auth.user.name,
     email: auth.user.email,

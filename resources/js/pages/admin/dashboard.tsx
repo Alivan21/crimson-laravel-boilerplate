@@ -1,6 +1,6 @@
 import { PlaceholderPattern } from "@/components/ui/placeholder-pattern";
 import AppLayout from "@/layouts/app-layout";
-import { type IBreadcrumbItem } from "@/types/common/navigation";
+import { type IBreadcrumbItem } from "@/types/shared/navigation";
 import { Head } from "@inertiajs/react";
 
 const breadcrumbs: IBreadcrumbItem[] = [
