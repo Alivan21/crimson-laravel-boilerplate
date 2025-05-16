@@ -11,7 +11,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/shared/use-mobile";
 import { type ISharedData } from "@/types/shared";
 import { usePage } from "@inertiajs/react";
 import { ChevronsUpDown } from "lucide-react";

@@ -45,3 +45,11 @@ export interface IPaginationResponse<T> {
   data: T[];
   meta: IMeta;
 }
+
+export interface ITableParams {
+  limit?: number;
+  search?: string;
+  col?: string;
+  sort?: "asc" | "desc";
+  [key: string]: string | number | undefined;
+}
