@@ -1,4 +1,4 @@
-export interface User {
+export interface IUser {
   id: number;
   name: string;
   email: string;
@@ -9,6 +9,6 @@ export interface User {
   [key: string]: unknown; // This allows for additional properties...
 }
 
-export interface AuthUser {
-  user: User;
+export interface IAuthUser {
+  user: IUser;
 }

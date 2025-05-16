@@ -10,10 +10,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import AppLayout from "@/layouts/app-layout";
 import SettingsLayout from "@/layouts/settings/layout";
-import { SharedData } from "@/types/common";
-import { BreadcrumbItem } from "@/types/common/navigation";
+import { ISharedData } from "@/types/common";
+import { IBreadcrumbItem } from "@/types/common/navigation";
 
-const breadcrumbs: BreadcrumbItem[] = [
+const breadcrumbs: IBreadcrumbItem[] = [
   {
     title: "Profile settings",
     href: "/settings/profile",
@@ -32,7 +32,7 @@ export default function Profile({
   mustVerifyEmail: boolean;
   status?: string;
 }) {
-  const { auth } = usePage<SharedData>().props;
+  const { auth } = usePage<ISharedData>().props;
 
   const { data, setData, patch, errors, processing, recentlySuccessful } = useForm<
     Required<ProfileForm>

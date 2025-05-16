@@ -1,6 +1,6 @@
 import type { Config } from "ziggy-js";
 
-export interface SharedData {
+export interface ISharedData {
   name: string;
   quote: { message: string; author: string };
   auth: Auth;

@@ -2,11 +2,11 @@ import Heading from "@/components/common/heading";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { type NavItem } from "@/types/common/navigation";
+import { type INavItem } from "@/types/common/navigation";
 import { Link } from "@inertiajs/react";
 import { type PropsWithChildren } from "react";
 
-const sidebarNavItems: NavItem[] = [
+const sidebarNavItems: INavItem[] = [
   {
     title: "Profile",
     href: "/settings/profile",

@@ -1,16 +1,16 @@
 import { LucideIcon } from "lucide-react";
 
-export interface BreadcrumbItem {
+export interface IBreadcrumbItem {
   title: string;
   href: string;
 }
 
-export interface NavGroup {
+export interface INavGroup {
   title: string;
-  items: NavItem[];
+  items: INavItem[];
 }
 
-export interface NavItem {
+export interface INavItem {
   title: string;
   href: string;
   icon?: LucideIcon | null;

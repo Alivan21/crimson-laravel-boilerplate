@@ -6,12 +6,12 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { useMobileNavigation } from "@/hooks/use-mobile-navigation";
-import { type User } from "@/types/api/user";
+import { type IUser } from "@/types/api/user";
 import { Link, router } from "@inertiajs/react";
 import { LogOut, Settings } from "lucide-react";
 
 interface UserMenuContentProps {
-  user: User;
+  user: IUser;
 }
 
 export function UserMenuContent({ user }: UserMenuContentProps) {

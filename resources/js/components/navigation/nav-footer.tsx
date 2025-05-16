@@ -6,16 +6,19 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { type NavItem } from "@/types/common/navigation";
+import { type INavItem } from "@/types/common/navigation";
 import { type ComponentPropsWithoutRef } from "react";
+
+interface NavFooterProps {
+  className?: string;
+  items: INavItem[];
+}
 
 export function NavFooter({
   items,
   className,
   ...props
-}: ComponentPropsWithoutRef<typeof SidebarGroup> & {
-  items: NavItem[];
-}) {
+}: ComponentPropsWithoutRef<typeof SidebarGroup> & NavFooterProps) {
   return (
     <SidebarGroup {...props} className={`group-data-[collapsible=icon]:p-0 ${className || ""}`}>
       <SidebarGroupContent>

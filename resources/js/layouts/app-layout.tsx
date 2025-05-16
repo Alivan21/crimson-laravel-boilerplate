@@ -1,10 +1,10 @@
 import AppLayoutTemplate from "@/layouts/app/app-sidebar-layout";
-import { type BreadcrumbItem } from "@/types/common/navigation";
+import { type IBreadcrumbItem } from "@/types/common/navigation";
 import { type ReactNode } from "react";
 
 interface AppLayoutProps {
   children: ReactNode;
-  breadcrumbs?: BreadcrumbItem[];
+  breadcrumbs?: IBreadcrumbItem[];
 }
 
 const AppLayout = ({ children, breadcrumbs, ...props }: AppLayoutProps) => (

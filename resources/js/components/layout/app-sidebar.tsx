@@ -10,12 +10,12 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { type NavItem } from "@/types/common/navigation";
+import { type INavItem } from "@/types/common/navigation";
 import { Link } from "@inertiajs/react";
 import { BookOpen, Folder, LayoutGrid } from "lucide-react";
 import AppLogo from "../icons/app-logo";
 
-const mainNavItems: NavItem[] = [
+const mainNavItems: INavItem[] = [
   {
     title: "Dashboard",
     href: "/dashboard",
@@ -23,7 +23,7 @@ const mainNavItems: NavItem[] = [
   },
 ];
 
-const footerNavItems: NavItem[] = [
+const footerNavItems: INavItem[] = [
   {
     title: "Repository",
     href: "https://github.com/laravel/react-starter-kit",

@@ -2,12 +2,12 @@ import { Head } from "@inertiajs/react";
 
 import AppearanceTabs from "@/components/common/appearance-tabs";
 import HeadingSmall from "@/components/common/heading-small";
-import { type BreadcrumbItem } from "@/types/common/navigation";
+import { type IBreadcrumbItem } from "@/types/common/navigation";
 
 import AppLayout from "@/layouts/app-layout";
 import SettingsLayout from "@/layouts/settings/layout";
 
-const breadcrumbs: BreadcrumbItem[] = [
+const breadcrumbs: IBreadcrumbItem[] = [
   {
     title: "Appearance settings",
     href: "/settings/appearance",

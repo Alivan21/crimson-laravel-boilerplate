@@ -1,5 +1,5 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { SharedData } from "@/types/common";
+import { ISharedData } from "@/types/common";
 import { usePage } from "@inertiajs/react";
 
 interface AppShellProps {
@@ -8,7 +8,7 @@ interface AppShellProps {
 }
 
 export function AppShell({ children, variant = "header" }: AppShellProps) {
-  const isOpen = usePage<SharedData>().props.sidebarOpen;
+  const isOpen = usePage<ISharedData>().props.sidebarOpen;
 
   if (variant === "header") {
     return <div className="flex min-h-screen w-full flex-col">{children}</div>;
