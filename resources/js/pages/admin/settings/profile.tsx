@@ -26,10 +26,10 @@ type ProfileForm = {
 };
 
 export default function Profile({
-  mustVerifyEmail,
+  must_verify_email,
   status,
 }: {
-  mustVerifyEmail: boolean;
+  must_verify_email: boolean;
   status?: string;
 }) {
   const { auth } = usePage<ISharedData>().props;
@@ -94,7 +94,7 @@ export default function Profile({
               <InputError className="mt-2" message={errors.email} />
             </div>
 
-            {mustVerifyEmail && auth.user.email_verified_at === null && (
+            {must_verify_email && auth.user.email_verified_at === null && (
               <div>
                 <p className="text-muted-foreground -mt-4 text-sm">
                   Your email address is unverified.{" "}
