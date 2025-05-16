@@ -1,5 +1,5 @@
 import AppLayoutTemplate from "@/layouts/app/app-sidebar-layout";
-import { type BreadcrumbItem } from "@/types";
+import { type BreadcrumbItem } from "@/types/common/navigation";
 import { type ReactNode } from "react";
 
 interface AppLayoutProps {

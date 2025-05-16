@@ -2,7 +2,7 @@ import Heading from "@/components/common/heading";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { type NavItem } from "@/types";
+import { type NavItem } from "@/types/common/navigation";
 import { Link } from "@inertiajs/react";
 import { type PropsWithChildren } from "react";
 

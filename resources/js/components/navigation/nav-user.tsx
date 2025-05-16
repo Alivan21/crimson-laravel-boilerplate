@@ -12,7 +12,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { type SharedData } from "@/types";
+import { type SharedData } from "@/types/common";
 import { usePage } from "@inertiajs/react";
 import { ChevronsUpDown } from "lucide-react";
 

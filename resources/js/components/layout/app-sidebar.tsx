@@ -10,7 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { type NavItem } from "@/types";
+import { type NavItem } from "@/types/common/navigation";
 import { Link } from "@inertiajs/react";
 import { BookOpen, Folder, LayoutGrid } from "lucide-react";
 import AppLogo from "../icons/app-logo";

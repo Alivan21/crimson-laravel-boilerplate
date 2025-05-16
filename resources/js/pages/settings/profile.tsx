@@ -1,4 +1,3 @@
-import { type BreadcrumbItem, type SharedData } from "@/types";
 import { Transition } from "@headlessui/react";
 import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import { FormEventHandler } from "react";
@@ -11,6 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import AppLayout from "@/layouts/app-layout";
 import SettingsLayout from "@/layouts/settings/layout";
+import { SharedData } from "@/types/common";
+import { BreadcrumbItem } from "@/types/common/navigation";
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
