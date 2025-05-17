@@ -11,33 +11,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ITableParams } from "@/types/shared";
+import { IMeta, ITableParams } from "@/types/shared";
 import { ChevronFirst, ChevronLast, ChevronLeft, ChevronRight } from "lucide-react";
 import { useCallback, useMemo } from "react";
 
 interface DataTablePaginationProps {
-  params: ITableParams;
   setParams: (params: (prevParams: ITableParams) => ITableParams) => void;
-  total: number;
-  lastPage: number;
+  meta: IMeta;
 }
 
-export function DataTablePagination({
-  params,
-  setParams,
-  total,
-  lastPage,
-}: DataTablePaginationProps) {
-  const page = Number(params.page) || 1;
-  const limit = Number(params.limit) || 10;
-
-  const { from, to } = useMemo(
-    () => ({
-      from: (page - 1) * limit + 1,
-      to: Math.min(page * limit, total),
-    }),
-    [page, limit, total],
-  );
+export function DataTablePagination({ setParams, meta }: DataTablePaginationProps) {
+  const page = meta.current_page;
+  const limit = meta.per_page;
 
   const handlePageChange = useCallback(
     (newPage: number) => {
@@ -64,7 +49,7 @@ export function DataTablePagination({
     const pages = [];
     const maxVisiblePages = 3;
     let startPage = Math.max(1, page - Math.floor(maxVisiblePages / 2));
-    const endPage = Math.min(lastPage, startPage + maxVisiblePages - 1);
+    const endPage = Math.min(meta.last_page, startPage + maxVisiblePages - 1);
 
     if (endPage - startPage + 1 < maxVisiblePages) {
       startPage = Math.max(1, endPage - maxVisiblePages + 1);
@@ -74,14 +59,14 @@ export function DataTablePagination({
       pages.push(i);
     }
     return pages;
-  }, [page, lastPage]);
+  }, [page, meta.last_page]);
 
-  const pageSizeOptions = useMemo(() => [10, 20, 30, 50, 100], []);
+  const pageSizeOptions = useMemo(() => [10, 20, 30, 50], []);
 
   return (
     <div className="flex w-full flex-col items-center justify-end gap-4 sm:flex-row">
       <div className="text-muted-foreground text-sm">
-        {from} - {to} of {total} items
+        {meta.from} - {meta.to} of {meta.total} items
       </div>
 
       <div className="flex items-center space-x-2">
@@ -148,7 +133,7 @@ export function DataTablePagination({
             <PaginationLink
               aria-label="Go to next page"
               className="h-8 w-8 p-0"
-              disabled={page === lastPage}
+              disabled={page === meta.last_page}
               href="#"
               onClick={(e) => {
                 e.preventDefault();
@@ -162,11 +147,11 @@ export function DataTablePagination({
             <PaginationLink
               aria-label="Go to last page"
               className="h-8 w-8 p-0"
-              disabled={page === lastPage}
+              disabled={page === meta.last_page}
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                handlePageChange(lastPage);
+                handlePageChange(meta.last_page);
               }}
             >
               <ChevronLast className="h-4 w-4" />

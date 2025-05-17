@@ -7,9 +7,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import useDebouncedSearch from "@/hooks/data-table/use-debounce-search";
-import useSorting from "@/hooks/data-table/use-sorting";
-import { ITableParams } from "@/types/shared";
+import { IMeta, ITableParams } from "@/types/shared";
 import * as React from "react";
+import { useCallback } from "react";
 import { type FilterableColumn } from "./filter";
 import { DataTablePagination } from "./pagination";
 import { DataTableSortHeader } from "./sort-header";
@@ -29,8 +29,7 @@ interface DataTableProps<TData> {
   initialParams?: Partial<ITableParams>;
   searchPlaceholder?: string;
   searchKey?: string;
-  total: number;
-  lastPage: number;
+  meta: IMeta;
   filterComponents?: FilterableColumn[];
 }
 
@@ -40,17 +39,21 @@ export function DataTable<TData>({
   initialParams = {},
   searchPlaceholder = "Search...",
   searchKey = "search",
-  total,
-  lastPage,
+  meta,
   filterComponents,
 }: DataTableProps<TData>) {
   const { params, setParams } = useDebouncedSearch(route(route().current()!)!, initialParams);
-  const { sort } = useSorting((params) => {
-    setParams((prev) => ({
-      ...prev,
-      ...params,
-    }));
-  });
+
+  const handleSort = useCallback(
+    (column: string, direction: "asc" | "desc" | undefined) => {
+      setParams((prev) => ({
+        ...prev,
+        col: column,
+        sort: direction,
+      }));
+    },
+    [setParams],
+  );
 
   return (
     <div className="space-y-4">
@@ -63,15 +66,18 @@ export function DataTable<TData>({
       />
       <div className="rounded-sm border">
         <Table>
-          <TableHeader>
-            <TableRow>
+          <TableHeader className="bg-white">
+            <TableRow className="divide-x divide-gray-200">
               {columns.map((column) => (
-                <TableHead key={column.id}>
+                <TableHead
+                  className="bg-muted px-3 text-sm font-bold whitespace-nowrap text-black"
+                  key={column.id}
+                >
                   <DataTableSortHeader
                     column={column}
                     currentColumn={params.col}
                     currentSort={params.sort}
-                    sort={sort}
+                    sort={handleSort}
                   />
                 </TableHead>
               ))}
@@ -88,7 +94,7 @@ export function DataTable<TData>({
               data.map((row, i) => (
                 <TableRow key={i}>
                   {columns.map((column) => (
-                    <TableCell key={column.id}>
+                    <TableCell className="px-4" key={column.id}>
                       {column.cell
                         ? column.cell(row)
                         : column.accessorKey
@@ -102,12 +108,7 @@ export function DataTable<TData>({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination
-        lastPage={lastPage}
-        params={params}
-        setParams={setParams}
-        total={total}
-      />
+      <DataTablePagination meta={meta} setParams={setParams} />
     </div>
   );
 }

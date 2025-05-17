@@ -74,10 +74,9 @@ export default function Users({ data }: UsersProps) {
               columns={columns}
               data={data.data}
               filterComponents={filters}
-              lastPage={data.meta.last_page}
+              meta={data.meta}
               searchKey="search"
               searchPlaceholder="Search users..."
-              total={data.meta.total}
             />
           </div>
         </div>

@@ -63,6 +63,6 @@ export interface ITableParams {
   limit?: number;
   search?: string;
   col?: string;
-  sort?: "asc" | "desc";
+  sort?: "asc" | "desc" | undefined;
   [key: string]: string | number | undefined;
 }
