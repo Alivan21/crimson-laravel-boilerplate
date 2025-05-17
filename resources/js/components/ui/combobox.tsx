@@ -437,7 +437,7 @@ function Combobox({
             />
           )}
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 ms-2">
           {selected ? (
             <span
               aria-label="Clear selection"

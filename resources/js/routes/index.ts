@@ -2,6 +2,13 @@ export const ROUTES = {
   HOME: "home",
   ADMIN: {
     DASHBOARD: "admin.dashboard",
+    USERS: {
+      INDEX: "admin.users.index",
+      CREATE: "admin.users.create",
+      EDIT: "admin.users.edit",
+      UPDATE: "admin.users.update",
+      DESTROY: "admin.users.destroy",
+    },
     SETTINGS: {
       PROFILE: {
         EDIT: "admin.profile.edit",

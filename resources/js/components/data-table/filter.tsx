@@ -29,7 +29,7 @@ export function DataTableFilter({ columns, params, setParams, className }: DataT
         if (column.type === "combobox") {
           return (
             <Combobox
-              className="w-[200px]"
+              className="w-fit"
               key={column.id}
               onChange={(option: Option | undefined) => {
                 setParams((prev) => ({
@@ -47,7 +47,7 @@ export function DataTableFilter({ columns, params, setParams, className }: DataT
         if (column.type === "datepicker") {
           return (
             <DateTimePicker
-              className="w-[200px]"
+              className="w-fit"
               key={column.id}
               onChange={(date) => {
                 setParams((prev) => ({

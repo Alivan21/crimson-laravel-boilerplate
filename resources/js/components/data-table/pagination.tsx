@@ -3,8 +3,6 @@ import {
   PaginationContent,
   PaginationItem,
   PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
 } from "@/components/ui/pagination";
 import {
   Select,
@@ -14,6 +12,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ITableParams } from "@/types/shared";
+import { ChevronFirst, ChevronLast, ChevronLeft, ChevronRight } from "lucide-react";
+import { useCallback, useMemo } from "react";
 
 interface DataTablePaginationProps {
   params: ITableParams;
@@ -31,83 +31,149 @@ export function DataTablePagination({
   const page = Number(params.page) || 1;
   const limit = Number(params.limit) || 10;
 
-  // Calculate the range of items being shown
-  const from = (page - 1) * limit + 1;
-  const to = Math.min(page * limit, total);
+  const { from, to } = useMemo(
+    () => ({
+      from: (page - 1) * limit + 1,
+      to: Math.min(page * limit, total),
+    }),
+    [page, limit, total],
+  );
+
+  const handlePageChange = useCallback(
+    (newPage: number) => {
+      setParams((prev) => ({
+        ...prev,
+        page: newPage,
+      }));
+    },
+    [setParams],
+  );
+
+  const handleLimitChange = useCallback(
+    (value: string) => {
+      setParams((prev) => ({
+        ...prev,
+        limit: Number(value),
+        page: 1,
+      }));
+    },
+    [setParams],
+  );
+
+  const pageNumbers = useMemo(() => {
+    const pages = [];
+    const maxVisiblePages = 3;
+    let startPage = Math.max(1, page - Math.floor(maxVisiblePages / 2));
+    const endPage = Math.min(lastPage, startPage + maxVisiblePages - 1);
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }, [page, lastPage]);
+
+  const pageSizeOptions = useMemo(() => [10, 20, 30, 50, 100], []);
 
   return (
-    <div className="flex items-center justify-between">
-      <div className="text-muted-foreground flex-1 text-sm">
-        Showing {from} to {to} of {total} entries
+    <div className="flex w-full flex-col items-center justify-end gap-4 sm:flex-row">
+      <div className="text-muted-foreground text-sm">
+        {from} - {to} of {total} items
       </div>
-      <div className="flex items-center space-x-6 lg:space-x-8">
-        <div className="flex items-center space-x-2">
-          <p className="text-sm font-medium">Rows per page</p>
-          <Select
-            onValueChange={(value) => {
-              setParams((prev) => ({
-                ...prev,
-                limit: Number(value),
-                page: 1, // Reset to first page when changing limit
-              }));
-            }}
-            value={`${limit}`}
-          >
-            <SelectTrigger className="h-8 w-[70px]">
-              <SelectValue placeholder={limit} />
-            </SelectTrigger>
-            <SelectContent side="top">
-              {[10, 20, 30, 50, 100].map((pageSize) => (
-                <SelectItem key={pageSize} value={`${pageSize}`}>
-                  {pageSize}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-          Page {page} of {lastPage}
-        </div>
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious
-                className={page <= 1 ? "pointer-events-none opacity-50" : ""}
+
+      <div className="flex items-center space-x-2">
+        <p className="text-sm font-medium">Rows per page</p>
+        <Select onValueChange={handleLimitChange} value={`${limit}`}>
+          <SelectTrigger className="h-8 w-[70px]">
+            <SelectValue placeholder={limit} />
+          </SelectTrigger>
+          <SelectContent side="top">
+            {pageSizeOptions.map((pageSize) => (
+              <SelectItem key={pageSize} value={`${pageSize}`}>
+                {pageSize}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <Pagination>
+        <PaginationContent className="flex-wrap">
+          <PaginationItem>
+            <PaginationLink
+              aria-label="Go to first page"
+              className="h-8 w-8 p-0"
+              disabled={page === 1}
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                handlePageChange(1);
+              }}
+            >
+              <ChevronFirst className="h-4 w-4" />
+            </PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink
+              aria-label="Go to previous page"
+              className="h-8 w-8 p-0"
+              disabled={page === 1}
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                handlePageChange(page - 1);
+              }}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </PaginationLink>
+          </PaginationItem>
+          {pageNumbers.map((pageNumber) => (
+            <PaginationItem key={pageNumber}>
+              <PaginationLink
+                className="h-8 w-8 p-0"
                 href="#"
+                isActive={pageNumber === page}
                 onClick={(e) => {
                   e.preventDefault();
-                  if (page > 1) {
-                    setParams((prev) => ({
-                      ...prev,
-                      page: page - 1,
-                    }));
-                  }
+                  handlePageChange(pageNumber);
                 }}
-              />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#" isActive>
-                {page}
+              >
+                {pageNumber}
               </PaginationLink>
             </PaginationItem>
-            <PaginationItem>
-              <PaginationNext
-                className={page >= lastPage ? "pointer-events-none opacity-50" : ""}
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (page < lastPage) {
-                    setParams((prev) => ({
-                      ...prev,
-                      page: page + 1,
-                    }));
-                  }
-                }}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      </div>
+          ))}
+          <PaginationItem>
+            <PaginationLink
+              aria-label="Go to next page"
+              className="h-8 w-8 p-0"
+              disabled={page === lastPage}
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                handlePageChange(page + 1);
+              }}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink
+              aria-label="Go to last page"
+              className="h-8 w-8 p-0"
+              disabled={page === lastPage}
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                handlePageChange(lastPage);
+              }}
+            >
+              <ChevronLast className="h-4 w-4" />
+            </PaginationLink>
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </div>
   );
 }

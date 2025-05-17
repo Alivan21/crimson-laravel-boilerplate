@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'is_active',
     ];
 
     /**
@@ -61,5 +62,13 @@ class User extends Authenticatable
     public function isUser(): bool
     {
         return $this->role === 'user';
+    }
+
+    /**
+     * Check if the user is active
+     */
+    public function isActive(): bool
+    {
+        return $this->is_active;
     }
 }

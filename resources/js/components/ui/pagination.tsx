@@ -13,7 +13,7 @@ function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
   return (
     <nav
       aria-label="pagination"
-      className={cn("mx-auto flex w-full justify-center", className)}
+      className={cn("flex", className)}
       data-slot="pagination"
       role="navigation"
       {...props}
@@ -51,6 +51,7 @@ function PaginationLink({
   return (
     <Link
       aria-current={isActive ? "page" : undefined}
+      as="button"
       className={cn(
         buttonVariants({
           variant: isActive ? "outline" : "ghost",

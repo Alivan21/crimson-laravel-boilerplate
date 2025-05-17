@@ -3,15 +3,13 @@ import { router } from "@inertiajs/react";
 import { debounce, pickBy } from "lodash";
 import { useCallback, useEffect, useState } from "react";
 import usePrevious from "./use-previous";
-const DEFAULT_LIMIT = 10;
 
 const useDebouncedSearch = (
   url: string,
   initialParams: Partial<ITableParams>,
-  initialTimeDebounce = 1000,
+  initialTimeDebounce = 500,
 ) => {
   const [params, setParams] = useState<ITableParams>({
-    limit: DEFAULT_LIMIT,
     ...initialParams,
   });
   const [timeDebounce, setTimeDebounce] = useState(initialTimeDebounce);

@@ -61,7 +61,7 @@ export function DataTable<TData>({
         searchPlaceholder={searchPlaceholder}
         setParams={setParams}
       />
-      <div className="rounded-md border">
+      <div className="rounded-sm border">
         <Table>
           <TableHeader>
             <TableRow>
