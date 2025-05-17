@@ -11,6 +11,7 @@ interface FormCheckboxProps
   id: string;
   error?: string;
   className?: string;
+  required?: boolean;
   onChange: (value: boolean) => void;
   ref?: React.Ref<HTMLButtonElement>;
 }
@@ -22,6 +23,7 @@ export function FormCheckbox({
   className,
   onChange,
   checked,
+  required = false,
   ref,
   ...props
 }: FormCheckboxProps) {
@@ -37,6 +39,7 @@ export function FormCheckbox({
       />
       <Label className="cursor-pointer" htmlFor={id}>
         {label}
+        {required && <span className="text-destructive ml-1">*</span>}
       </Label>
       <InputError message={error} />
     </div>

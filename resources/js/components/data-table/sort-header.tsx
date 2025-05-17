@@ -16,7 +16,7 @@ export function DataTableSortHeader<TData>({
   currentColumn,
 }: DataTableSortHeaderProps<TData>) {
   if (!column.enableSorting) {
-    return <div>{column.header}</div>;
+    return <span>{column.header}</span>;
   }
 
   return (

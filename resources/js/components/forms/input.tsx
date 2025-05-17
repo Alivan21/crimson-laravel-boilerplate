@@ -15,6 +15,7 @@ interface FormInputProps extends Omit<React.ComponentProps<"input">, "onChange">
   error?: string;
   withForgotPassword?: boolean;
   className?: string;
+  required?: boolean;
   onChange: (value: string) => void;
   ref?: React.Ref<HTMLInputElement>;
 }
@@ -27,6 +28,7 @@ export function FormInput({
   className,
   onChange,
   type = "text",
+  required = false,
   ref,
   ...props
 }: FormInputProps) {
@@ -37,7 +39,10 @@ export function FormInput({
   return (
     <div className={cn("grid gap-2", className)}>
       <div className="flex items-center">
-        <Label htmlFor={id}>{label}</Label>
+        <Label htmlFor={id}>
+          {label}
+          {required && <span className="text-destructive ml-1">*</span>}
+        </Label>
         {withForgotPassword && (
           <TextLink className="ml-auto text-sm" href={route(ROUTES.AUTH.PASSWORD.REQUEST)}>
             Forgot password?

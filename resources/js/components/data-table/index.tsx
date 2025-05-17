@@ -44,7 +44,7 @@ export function DataTable<TData>({
   lastPage,
   filterComponents,
 }: DataTableProps<TData>) {
-  const { params, setParams } = useDebouncedSearch(route(route().current()!), initialParams);
+  const { params, setParams } = useDebouncedSearch(route(route().current()!)!, initialParams);
   const { sort } = useSorting((params) => {
     setParams((prev) => ({
       ...prev,

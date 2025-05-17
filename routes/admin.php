@@ -5,12 +5,10 @@ use App\Http\Controllers\Settings\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::middleware('auth')->group(function () {
-    Route::middleware(['verified'])->group(function () {
-        Route::get('admin/dashboard', function () {
-            return Inertia::render('admin/dashboard');
-        })->name('admin.dashboard');
-    });
+Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
+    Route::get('admin/dashboard', function () {
+        return Inertia::render('admin/dashboard');
+    })->name('admin.dashboard');
 
     Route::redirect('admin/settings', 'admin/settings/profile');
 
