@@ -1,4 +1,4 @@
-import { DataTable } from "@/components/data-table";
+import { Column, DataTable } from "@/components/data-table";
 import { type FilterableColumn } from "@/components/data-table/filter";
 import { Badge } from "@/components/ui/badge";
 import AppLayout from "@/layouts/app-layout";
@@ -20,22 +20,30 @@ interface UsersProps {
 }
 
 export default function Users({ data }: UsersProps) {
-  const columns = [
+  const columns: Column<IUser>[] = [
+    {
+      id: "id",
+      header: "No",
+      enableSorting: false,
+      accessorKey: "id",
+      width: 64,
+      cell: (_, index) => (index !== undefined ? index + 1 : ""),
+    },
     {
       id: "name",
       header: "Name",
-      accessorKey: "name" as keyof IUser,
+      accessorKey: "name",
       enableSorting: true,
     },
     {
       id: "email",
       header: "Email",
-      accessorKey: "email" as keyof IUser,
+      accessorKey: "email",
     },
     {
       id: "is_active",
       header: "Status",
-      accessorKey: "is_active" as keyof IUser,
+      accessorKey: "is_active",
       enableSorting: true,
       cell: (row: IUser) => (
         <Badge variant={row.is_active ? "default" : "destructive"}>
@@ -46,7 +54,7 @@ export default function Users({ data }: UsersProps) {
     {
       id: "created_at",
       header: "Created At",
-      accessorKey: "created_at" as keyof IUser,
+      accessorKey: "created_at",
       cell: (row: IUser) => new Date(row.created_at).toLocaleDateString(),
     },
   ];

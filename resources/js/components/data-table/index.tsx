@@ -19,8 +19,9 @@ export interface Column<TData> {
   id: string;
   header: string;
   accessorKey?: keyof TData;
-  cell?: (row: TData) => React.ReactNode;
+  cell?: (row: TData, index?: number) => React.ReactNode;
   enableSorting?: boolean;
+  width?: string | number;
 }
 
 interface DataTableProps<TData> {
@@ -70,8 +71,9 @@ export function DataTable<TData>({
             <TableRow className="divide-x divide-gray-200">
               {columns.map((column) => (
                 <TableHead
-                  className="bg-muted px-3 text-sm font-bold whitespace-nowrap text-black"
+                  className="bg-muted px-2.5 text-sm font-bold whitespace-nowrap text-black"
                   key={column.id}
+                  style={column.width ? { width: column.width } : undefined}
                 >
                   <DataTableSortHeader
                     column={column}
@@ -94,9 +96,13 @@ export function DataTable<TData>({
               data.map((row, i) => (
                 <TableRow key={i}>
                   {columns.map((column) => (
-                    <TableCell className="px-4" key={column.id}>
+                    <TableCell
+                      className="px-4"
+                      key={column.id}
+                      style={column.width ? { width: column.width } : undefined}
+                    >
                       {column.cell
-                        ? column.cell(row)
+                        ? column.cell(row, i)
                         : column.accessorKey
                           ? String(row[column.accessorKey])
                           : null}
