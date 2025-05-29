@@ -53,6 +53,7 @@
     "cmdk": "^1.1.1",
     "concurrently": "^9.0.1",
     "date-fns": "^4.1.0",
+    "es-toolkit": "^1.38.0",
     "globals": "^15.14.0",
     "laravel-vite-plugin": "^1.0",
     "lucide-react": "^0.475.0",
