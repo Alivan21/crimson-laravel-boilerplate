@@ -1,6 +1,6 @@
 import { ITableParams } from "@/types/shared";
 import { router } from "@inertiajs/react";
-import { debounce, pickBy } from "lodash";
+import { debounce, pickBy } from "es-toolkit";
 import { useCallback, useEffect, useState } from "react";
 import usePrevious from "./use-previous";
 
@@ -17,12 +17,16 @@ const useDebouncedSearch = (
 
   const search = useCallback(
     debounce((params) => {
-      router.get(url, pickBy(params), {
-        replace: true,
-        preserveScroll: true,
-        preserveState: true,
-        queryStringArrayFormat: "indices",
-      });
+      router.get(
+        url,
+        pickBy(params, (value) => Boolean(value)),
+        {
+          replace: true,
+          preserveScroll: true,
+          preserveState: true,
+          queryStringArrayFormat: "indices",
+        },
+      );
     }, timeDebounce),
     [timeDebounce],
   );
