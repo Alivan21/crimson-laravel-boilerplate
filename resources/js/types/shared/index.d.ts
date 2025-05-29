@@ -3,7 +3,7 @@ import type { Config } from "ziggy-js";
 export interface ISharedData {
   name: string;
   quote: { message: string; author: string };
-  auth: Auth;
+  auth: IAuthUser;
   ziggy: Config & { location: string };
   sidebarOpen: boolean;
   [key: string]: unknown;
