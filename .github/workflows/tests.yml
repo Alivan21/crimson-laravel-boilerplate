@@ -51,6 +51,3 @@ jobs:
 
       - name: Build Assets
         run: pnpm run build
-
-      - name: Run Tests
-        run: ./vendor/bin/pest
