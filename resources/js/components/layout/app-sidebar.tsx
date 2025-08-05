@@ -1,4 +1,5 @@
 import { ROUTES } from "@/common/routes";
+import { SIDEBAR_ITEMS, SIDEBAR_ITEMS_FOOTER } from "@/common/sidebar";
 import { NavFooter } from "@/components/navigation/nav-footer";
 import { NavMain } from "@/components/navigation/nav-main";
 import { NavUser } from "@/components/navigation/nav-user";
@@ -11,33 +12,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { type INavItem } from "@/types/shared/navigation";
 import { Link } from "@inertiajs/react";
-import { BookOpen, Folder, LayoutGrid } from "lucide-react";
+import { memo } from "react";
 import AppLogo from "../icons/app-logo";
 
-const mainNavItems: INavItem[] = [
-  {
-    title: "Dashboard",
-    href: route(ROUTES.ADMIN.DASHBOARD),
-    icon: LayoutGrid,
-  },
-];
-
-const footerNavItems: INavItem[] = [
-  {
-    title: "Repository",
-    href: "https://github.com/laravel/react-starter-kit",
-    icon: Folder,
-  },
-  {
-    title: "Documentation",
-    href: "https://laravel.com/docs/starter-kits#react",
-    icon: BookOpen,
-  },
-];
-
-export function AppSidebar() {
+export const AppSidebar = memo(() => {
   return (
     <Sidebar collapsible="icon" variant="inset">
       <SidebarHeader>
@@ -53,13 +32,15 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
-        <NavMain items={mainNavItems} />
+        <NavMain groups={SIDEBAR_ITEMS} />
       </SidebarContent>
 
       <SidebarFooter>
-        <NavFooter className="mt-auto" items={footerNavItems} />
+        <NavFooter items={SIDEBAR_ITEMS_FOOTER} />
         <NavUser />
       </SidebarFooter>
     </Sidebar>
   );
-}
+});
+
+AppSidebar.displayName = "AppSidebar";

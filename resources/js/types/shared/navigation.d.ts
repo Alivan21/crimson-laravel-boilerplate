@@ -6,7 +6,7 @@ export interface IBreadcrumbItem {
 }
 
 export interface INavGroup {
-  title: string;
+  group: string;
   items: INavItem[];
 }
 
@@ -15,4 +15,5 @@ export interface INavItem {
   href: string;
   icon?: LucideIcon | null;
   isActive?: boolean;
+  items?: NavItem[];
 }

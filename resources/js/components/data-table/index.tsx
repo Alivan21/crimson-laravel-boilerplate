@@ -1,3 +1,4 @@
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
   Table,
   TableBody,
@@ -68,64 +69,67 @@ export function DataTable<TData>({
         searchPlaceholder={searchPlaceholder}
         setParams={setParams}
       />
-      <div className="border-border rounded-sm border">
-        <Table>
-          <TableHeader className="bg-card">
-            <TableRow className="divide-border divide-x">
-              {columns.map((column) => (
-                <TableHead
-                  className="bg-muted text-card-foreground max-w-fit px-2.5 text-sm font-bold"
-                  key={column.id}
-                  style={
-                    column.width
-                      ? {
-                          width: column.width,
-                        }
-                      : undefined
-                  }
-                >
-                  <DataTableSortHeader
-                    column={column}
-                    currentColumn={params.sort_by as string}
-                    currentSort={params.order as "asc" | "desc"}
-                    sort={handleSort}
-                  />
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data.length === 0 ? (
-              <TableRow>
-                <TableCell
-                  className="text-muted-foreground h-24 text-center"
-                  colSpan={columns.length}
-                >
-                  No results.
-                </TableCell>
+      <ScrollArea className="border-border w-full rounded-sm border whitespace-nowrap">
+        <div className="min-w-full">
+          <Table>
+            <TableHeader className="bg-card">
+              <TableRow className="divide-border divide-x">
+                {columns.map((column) => (
+                  <TableHead
+                    className="bg-muted text-card-foreground max-w-fit px-2.5 text-sm font-bold"
+                    key={column.id}
+                    style={
+                      column.width
+                        ? {
+                            width: column.width,
+                          }
+                        : undefined
+                    }
+                  >
+                    <DataTableSortHeader
+                      column={column}
+                      currentColumn={params.sort_by as string}
+                      currentSort={params.order as "asc" | "desc"}
+                      sort={handleSort}
+                    />
+                  </TableHead>
+                ))}
               </TableRow>
-            ) : (
-              data.map((row, i) => (
-                <TableRow className="hover:bg-muted/50" key={i}>
-                  {columns.map((column) => (
-                    <TableCell
-                      className="text-foreground px-4"
-                      key={column.id}
-                      style={column.width ? { width: column.width } : undefined}
-                    >
-                      {column.cell
-                        ? column.cell(row, i)
-                        : column.accessorKey
-                          ? String(row[column.accessorKey])
-                          : null}
-                    </TableCell>
-                  ))}
+            </TableHeader>
+            <TableBody>
+              {data.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    className="text-muted-foreground h-24 text-center"
+                    colSpan={columns.length}
+                  >
+                    No results.
+                  </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+              ) : (
+                data.map((row, i) => (
+                  <TableRow className="hover:bg-muted/50" key={i}>
+                    {columns.map((column) => (
+                      <TableCell
+                        className="text-foreground px-4"
+                        key={column.id}
+                        style={column.width ? { width: column.width } : undefined}
+                      >
+                        {column.cell
+                          ? column.cell(row, i)
+                          : column.accessorKey
+                            ? String(row[column.accessorKey])
+                            : null}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
       <DataTablePagination meta={meta} setParams={setParams} />
     </div>
   );
