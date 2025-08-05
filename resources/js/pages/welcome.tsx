@@ -8,9 +8,10 @@ export default function Welcome() {
   return (
     <>
       <Head title="Welcome">
-        <link href="https://fonts.bunny.net" rel="preconnect" />
+        <link href="https://fonts.googleapis.com" rel="preconnect" />
+        <link href="https://fonts.gstatic.com" rel="preconnect" />
         <link
-          href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600"
+          href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
           rel="stylesheet"
         />
       </Head>

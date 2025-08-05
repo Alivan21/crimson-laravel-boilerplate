@@ -1,5 +1,5 @@
 import { Transition } from "@headlessui/react";
-import { Head, useForm } from "@inertiajs/react";
+import { useForm } from "@inertiajs/react";
 import { FormEventHandler, useRef } from "react";
 
 import HeadingSmall from "@/components/common/heading-small";
@@ -47,9 +47,7 @@ export default function Password() {
   };
 
   return (
-    <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Password settings" />
-
+    <AppLayout breadcrumbs={breadcrumbs} showHeader={false} title="Password settings">
       <SettingsLayout>
         <div className="space-y-6">
           <HeadingSmall

@@ -1,5 +1,5 @@
 import { Transition } from "@headlessui/react";
-import { Head, Link, useForm, usePage } from "@inertiajs/react";
+import { Link, useForm, usePage } from "@inertiajs/react";
 import { FormEventHandler } from "react";
 
 import { ROUTES } from "@/common/routes";
@@ -44,9 +44,7 @@ export default function Profile({ must_verify_email, status }: ProfileProps) {
   };
 
   return (
-    <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Profile settings" />
-
+    <AppLayout breadcrumbs={breadcrumbs} showHeader={false} title="Profile settings">
       <SettingsLayout>
         <div className="space-y-6">
           <HeadingSmall

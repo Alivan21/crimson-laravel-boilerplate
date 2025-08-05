@@ -31,7 +31,7 @@ export function DataTableSortHeader<TData>({
 
   return (
     <Button
-      className="group flex h-auto min-h-8 w-full items-center justify-start bg-transparent px-2 py-1 font-bold text-black"
+      className="group text-card-foreground hover:bg-accent hover:text-accent-foreground flex h-auto min-h-8 w-full items-center justify-start bg-transparent px-2 py-1 font-bold"
       onClick={handleSort}
       variant="ghost"
     >
@@ -40,14 +40,14 @@ export function DataTableSortHeader<TData>({
         <span className="ml-auto transition-opacity">
           {currentColumn === column.id ? (
             currentSort === "asc" ? (
-              <ChevronDown className="size-4 text-gray-800" />
+              <ChevronDown className="text-muted-foreground size-4" />
             ) : currentSort === "desc" ? (
-              <ChevronUp className="size-4 text-gray-800" />
+              <ChevronUp className="text-muted-foreground size-4" />
             ) : (
-              <ChevronsUpDown className="size-4 text-gray-800" />
+              <ChevronsUpDown className="text-muted-foreground size-4" />
             )
           ) : (
-            <ChevronsUpDown className="size-4 text-gray-800" />
+            <ChevronsUpDown className="text-muted-foreground size-4" />
           )}
         </span>
       )}

@@ -6,7 +6,6 @@ import AppLayout from "@/layouts/app-layout";
 import { TPaginatedUserResponse } from "@/types/modules/admin/user";
 import { IUser } from "@/types/shared";
 import { IBreadcrumbItem } from "@/types/shared/navigation";
-import { Head } from "@inertiajs/react";
 
 const breadcrumbs: IBreadcrumbItem[] = [
   {
@@ -72,23 +71,15 @@ export default function Users({ data }: UsersProps) {
   ];
 
   return (
-    <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Users" />
-      <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-4">
-            <h1 className="text-2xl font-bold">Users</h1>
-            <DataTable
-              columns={columns}
-              data={data.items}
-              filterComponents={filters}
-              meta={data.meta}
-              searchKey="search"
-              searchPlaceholder="Search users..."
-            />
-          </div>
-        </div>
-      </div>
+    <AppLayout breadcrumbs={breadcrumbs} title="Users">
+      <DataTable
+        columns={columns}
+        data={data.items}
+        filterComponents={filters}
+        meta={data.meta}
+        searchKey="search"
+        searchPlaceholder="Search users..."
+      />
     </AppLayout>
   );
 }

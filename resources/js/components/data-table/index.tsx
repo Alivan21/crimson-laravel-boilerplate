@@ -68,13 +68,13 @@ export function DataTable<TData>({
         searchPlaceholder={searchPlaceholder}
         setParams={setParams}
       />
-      <div className="rounded-sm border">
+      <div className="border-border rounded-sm border">
         <Table>
-          <TableHeader className="bg-white">
-            <TableRow className="divide-x divide-gray-200">
+          <TableHeader className="bg-card">
+            <TableRow className="divide-border divide-x">
               {columns.map((column) => (
                 <TableHead
-                  className="bg-muted max-w-fit px-2.5 text-sm font-bold text-black"
+                  className="bg-muted text-card-foreground max-w-fit px-2.5 text-sm font-bold"
                   key={column.id}
                   style={
                     column.width
@@ -97,16 +97,19 @@ export function DataTable<TData>({
           <TableBody>
             {data.length === 0 ? (
               <TableRow>
-                <TableCell className="h-24 text-center" colSpan={columns.length}>
+                <TableCell
+                  className="text-muted-foreground h-24 text-center"
+                  colSpan={columns.length}
+                >
                   No results.
                 </TableCell>
               </TableRow>
             ) : (
               data.map((row, i) => (
-                <TableRow key={i}>
+                <TableRow className="hover:bg-muted/50" key={i}>
                   {columns.map((column) => (
                     <TableCell
-                      className="px-4"
+                      className="text-foreground px-4"
                       key={column.id}
                       style={column.width ? { width: column.width } : undefined}
                     >

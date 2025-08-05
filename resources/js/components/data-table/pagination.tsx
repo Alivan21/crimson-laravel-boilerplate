@@ -74,7 +74,7 @@ export function DataTablePagination({ setParams, meta }: DataTablePaginationProp
       <div className="order-1 flex flex-col items-center gap-4 sm:order-2 sm:flex-row">
         {/* Rows per page selector */}
         <div className="flex items-center space-x-2">
-          <p className="text-sm font-medium whitespace-nowrap">Rows per page</p>
+          <p className="text-foreground text-sm font-medium whitespace-nowrap">Rows per page</p>
           <Select onValueChange={handleLimitChange} value={`${limit}`}>
             <SelectTrigger className="h-9 w-[70px]">
               <SelectValue placeholder={limit} />

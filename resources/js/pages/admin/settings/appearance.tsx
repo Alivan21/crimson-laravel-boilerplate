@@ -1,5 +1,3 @@
-import { Head } from "@inertiajs/react";
-
 import AppearanceTabs from "@/components/common/appearance-tabs";
 import HeadingSmall from "@/components/common/heading-small";
 import { type IBreadcrumbItem } from "@/types/shared/navigation";
@@ -16,9 +14,7 @@ const breadcrumbs: IBreadcrumbItem[] = [
 
 export default function Appearance() {
   return (
-    <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Appearance settings" />
-
+    <AppLayout breadcrumbs={breadcrumbs} showHeader={false} title="Appearance settings">
       <SettingsLayout>
         <div className="space-y-6">
           <HeadingSmall
