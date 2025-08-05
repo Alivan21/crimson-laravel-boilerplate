@@ -53,7 +53,7 @@ export function DataTable<TData>({
     (column: string, direction: "asc" | "desc" | undefined) => {
       setParams((prev) => ({
         ...prev,
-        sort_by: column,
+        col: column,
         order: direction,
       }));
     },
@@ -88,7 +88,7 @@ export function DataTable<TData>({
                   >
                     <DataTableSortHeader
                       column={column}
-                      currentColumn={params.sort_by as string}
+                      currentColumn={params.col as string}
                       currentSort={params.order as "asc" | "desc"}
                       sort={handleSort}
                     />

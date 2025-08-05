@@ -24,9 +24,9 @@ export type TPaginationResponse<T> = {
 
 export type TDataTableParams = {
   search?: string;
-  sort_by?: string;
+  col?: string;
   order?: "asc" | "desc";
-  per_page?: number;
+  limit?: number;
   page?: number;
   [key: string]: string | number | boolean | undefined;
 };

@@ -289,18 +289,18 @@ class DataTableService
         }
 
         // Apply filters
-        $filters = $request->except(['search', 'page', 'per_page', 'sort_by', 'order']);
+        $filters = $request->except(['search', 'page', 'limit', 'col', 'order']);
         $this->applyFilters($filters);
 
         // Apply sorting
         $this->applySorting(
-            $request->get('sort_by'),
+            $request->get('col'),
             $request->get('order')
         );
 
         // Get pagination parameters
         $perPage = min(
-            max((int) $request->get('per_page', $this->defaultPerPage), 1),
+            max((int) $request->get('limit', $this->defaultPerPage), 1),
             $this->maxPerPage
         );
 

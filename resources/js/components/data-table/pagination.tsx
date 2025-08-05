@@ -38,7 +38,7 @@ export function DataTablePagination({ setParams, meta }: DataTablePaginationProp
     (value: string) => {
       setParams((prev) => ({
         ...prev,
-        per_page: Number(value),
+        limit: Number(value),
         page: 1,
       }));
     },
@@ -79,7 +79,7 @@ export function DataTablePagination({ setParams, meta }: DataTablePaginationProp
             <SelectTrigger className="h-9 w-[70px]">
               <SelectValue placeholder={limit} />
             </SelectTrigger>
-            <SelectContent side="top">
+            <SelectContent>
               {pageSizeOptions.map((pageSize) => (
                 <SelectItem key={pageSize} value={`${pageSize}`}>
                   {pageSize}
