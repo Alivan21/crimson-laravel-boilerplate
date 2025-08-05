@@ -18,6 +18,9 @@ class UserController extends Controller
         $data = DataTable::make(User::query())
             ->searchable(['name', 'email'])
             ->sortable(['name', 'email'])
+            ->filterable([
+                'is_active' => 'boolean'
+            ])
             ->getResponse($request);
 
         return Inertia::render('admin/users/index', [

@@ -6,6 +6,25 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
+/**
+ * DataTable Service for handling advanced data table operations
+ *
+ * This service provides a fluent interface for building complex data table queries
+ * with search, sorting, filtering, and pagination capabilities.
+ *
+ * @method static self make(Builder $query) Create a new DataTable instance
+ * @method self searchable(array $columns) Set searchable columns
+ * @method self sortable(array $columns) Set sortable columns
+ * @method self filterable(array $columns) Set filterable columns with their filter types
+ * @method self with(array $relationships) Set relationships to load
+ * @method self defaultPerPage(int $perPage) Set default pagination size
+ * @method self maxPerPage(int $maxPerPage) Set maximum pagination size
+ * @method self filter(string $key, callable $callback) Add a custom filter callback
+ * @method LengthAwarePaginator get(Request $request) Process the request and return paginated results
+ * @method array getResponse(Request $request) Process the request and return paginated and transformed results
+ * @method Builder getQuery() Get the query builder for custom modifications
+ * @method array toArray(LengthAwarePaginator $paginator) Transform the paginated results to match frontend expectations
+ */
 class DataTableService
 {
     protected Builder $query;
@@ -16,6 +35,11 @@ class DataTableService
     protected int $defaultPerPage = 10;
     protected int $maxPerPage = 100;
 
+    /**
+     * Create a new DataTableService instance
+     *
+     * @param Builder $query The Eloquent query builder instance
+     */
     public function __construct(Builder $query)
     {
         $this->query = $query;
@@ -23,6 +47,9 @@ class DataTableService
 
     /**
      * Create a new DataTable instance
+     *
+     * @param Builder $query The Eloquent query builder instance
+     * @return self
      */
     public static function make(Builder $query): self
     {
@@ -31,6 +58,9 @@ class DataTableService
 
     /**
      * Set searchable columns
+     *
+     * @param array $columns Array of column names that can be searched
+     * @return self
      */
     public function searchable(array $columns): self
     {
@@ -40,6 +70,9 @@ class DataTableService
 
     /**
      * Set sortable columns
+     *
+     * @param array $columns Array of column names that can be sorted
+     * @return self
      */
     public function sortable(array $columns): self
     {
@@ -49,6 +82,18 @@ class DataTableService
 
     /**
      * Set filterable columns with their filter types
+     *
+     * Available filter types:
+     * - 'exact': Exact match
+     * - 'like': Case-insensitive LIKE search
+     * - 'date': Date comparison
+     * - 'date_range': Date range filter (comma-separated)
+     * - 'in': IN clause (comma-separated values)
+     * - 'boolean': Boolean filter
+     * - 'relationship': Filter by relationship
+     *
+     * @param array $columns Associative array of column => filter_type
+     * @return self
      */
     public function filterable(array $columns): self
     {
@@ -58,6 +103,9 @@ class DataTableService
 
     /**
      * Set relationships to load
+     *
+     * @param array $relationships Array of relationship names to eager load
+     * @return self
      */
     public function with(array $relationships): self
     {
@@ -67,6 +115,9 @@ class DataTableService
 
     /**
      * Set default pagination size
+     *
+     * @param int $perPage Number of items per page
+     * @return self
      */
     public function defaultPerPage(int $perPage): self
     {
@@ -76,6 +127,9 @@ class DataTableService
 
     /**
      * Set maximum pagination size
+     *
+     * @param int $maxPerPage Maximum number of items per page
+     * @return self
      */
     public function maxPerPage(int $maxPerPage): self
     {
@@ -275,6 +329,12 @@ class DataTableService
 
     /**
      * Process the request and return paginated results
+     *
+     * This method applies search, filters, sorting, and pagination to the query
+     * based on the request parameters.
+     *
+     * @param Request $request The HTTP request containing search, filter, and pagination parameters
+     * @return LengthAwarePaginator The paginated results
      */
     public function get(Request $request): LengthAwarePaginator
     {
@@ -315,6 +375,12 @@ class DataTableService
 
     /**
      * Process the request and return paginated and transformed results
+     *
+     * This method processes the request and returns the results in a format
+     * optimized for frontend data tables.
+     *
+     * @param Request $request The HTTP request containing search, filter, and pagination parameters
+     * @return array Array containing 'items' and 'meta' keys for frontend consumption
      */
     public function getResponse(Request $request): array
     {
@@ -324,6 +390,8 @@ class DataTableService
 
     /**
      * Get the query builder for custom modifications
+     *
+     * @return Builder The underlying Eloquent query builder instance
      */
     public function getQuery(): Builder
     {
@@ -332,6 +400,10 @@ class DataTableService
 
     /**
      * Add a custom filter callback
+     *
+     * @param string $key The request parameter key to check for
+     * @param callable $callback The callback function to apply if the key exists in the request
+     * @return self
      */
     public function filter(string $key, callable $callback): self
     {
@@ -344,6 +416,9 @@ class DataTableService
 
     /**
      * Transform the paginated results to match frontend expectations
+     *
+     * @param LengthAwarePaginator $paginator The paginated results
+     * @return array Array with 'items' and 'meta' structure for frontend data tables
      */
     public function toArray(LengthAwarePaginator $paginator): array
     {
