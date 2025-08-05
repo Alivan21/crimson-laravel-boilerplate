@@ -2,13 +2,13 @@ import { Transition } from "@headlessui/react";
 import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import { FormEventHandler } from "react";
 
+import { ROUTES } from "@/common/routes";
 import HeadingSmall from "@/components/common/heading-small";
 import DeleteUser from "@/components/delete-user";
 import { FormInput } from "@/components/forms/input";
 import { Button } from "@/components/ui/button";
 import AppLayout from "@/layouts/app-layout";
 import SettingsLayout from "@/layouts/settings/layout";
-import { ROUTES } from "@/routes";
 import { TProfileForm } from "@/types/modules/admin/settings";
 import { ISharedData } from "@/types/shared";
 import { IBreadcrumbItem } from "@/types/shared/navigation";

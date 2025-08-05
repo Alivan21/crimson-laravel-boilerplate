@@ -1,3 +1,4 @@
+import { ROUTES } from "@/common/routes";
 import { NavFooter } from "@/components/navigation/nav-footer";
 import { NavMain } from "@/components/navigation/nav-main";
 import { NavUser } from "@/components/navigation/nav-user";
@@ -10,7 +11,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { ROUTES } from "@/routes";
 import { type INavItem } from "@/types/shared/navigation";
 import { Link } from "@inertiajs/react";
 import { BookOpen, Folder, LayoutGrid } from "lucide-react";

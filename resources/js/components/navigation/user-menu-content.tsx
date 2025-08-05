@@ -1,3 +1,4 @@
+import { ROUTES } from "@/common/routes";
 import { UserInfo } from "@/components/navigation/user-info";
 import {
   DropdownMenuGroup,
@@ -6,7 +7,6 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { useMobileNavigation } from "@/hooks/shared/use-mobile-navigation";
-import { ROUTES } from "@/routes";
 import { type IUser } from "@/types/shared";
 import { Link, router } from "@inertiajs/react";
 import { LogOut, Settings } from "lucide-react";

@@ -1,15 +1,15 @@
-import { ITableParams } from "@/types/shared";
+import { TDataTableParams } from "@/types/shared/response";
 import { router } from "@inertiajs/react";
 import { debounce, pickBy } from "es-toolkit";
 import { useCallback, useEffect, useState } from "react";
 import usePrevious from "./use-previous";
 
-const useDebouncedSearch = (
+const useDebouncedSearchParams = (
   url: string,
-  initialParams: Partial<ITableParams>,
+  initialParams: Partial<TDataTableParams>,
   initialTimeDebounce = 500,
 ) => {
-  const [params, setParams] = useState<ITableParams>({
+  const [params, setParams] = useState<TDataTableParams>({
     ...initialParams,
   });
   const [timeDebounce, setTimeDebounce] = useState(initialTimeDebounce);
@@ -19,7 +19,7 @@ const useDebouncedSearch = (
     debounce((params) => {
       router.get(
         url,
-        pickBy(params, (value) => Boolean(value)),
+        pickBy(params, (value) => value !== undefined && value !== ""),
         {
           replace: true,
           preserveScroll: true,
@@ -40,4 +40,4 @@ const useDebouncedSearch = (
   return { params, setParams, setTimeDebounce };
 };
 
-export default useDebouncedSearch;
+export default useDebouncedSearchParams;

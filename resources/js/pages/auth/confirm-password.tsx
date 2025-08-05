@@ -2,10 +2,10 @@ import { Head, useForm } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
 import { FormEventHandler } from "react";
 
+import { ROUTES } from "@/common/routes";
 import { FormInput } from "@/components/forms/input";
 import { Button } from "@/components/ui/button";
 import AuthLayout from "@/layouts/auth-layout";
-import { ROUTES } from "@/routes";
 
 export default function ConfirmPassword() {
   const { data, setData, post, processing, errors, reset } = useForm<

@@ -1,8 +1,8 @@
-import { Column, DataTable } from "@/components/data-table";
-import { type FilterableColumn } from "@/components/data-table/filter";
+import { ROUTES } from "@/common/routes";
+import { DataTable, TColumn } from "@/components/data-table";
+import { TFilterableColumn } from "@/components/data-table/filter";
 import { Badge } from "@/components/ui/badge";
 import AppLayout from "@/layouts/app-layout";
-import { ROUTES } from "@/routes";
 import { TPaginatedUserResponse } from "@/types/modules/admin/user";
 import { IUser } from "@/types/shared";
 import { IBreadcrumbItem } from "@/types/shared/navigation";
@@ -20,13 +20,13 @@ interface UsersProps {
 }
 
 export default function Users({ data }: UsersProps) {
-  const columns: Column<IUser>[] = [
+  const columns: TColumn<IUser>[] = [
     {
       id: "id",
       header: "No",
       enableSorting: false,
       accessorKey: "id",
-      width: 64,
+      width: 50,
       cell: (_, index) => (index !== undefined ? index + 1 : ""),
     },
     {
@@ -59,11 +59,11 @@ export default function Users({ data }: UsersProps) {
     },
   ];
 
-  const filters: FilterableColumn[] = [
+  const filters: TFilterableColumn[] = [
     {
       id: "is_active",
       title: "Status",
-      type: "combobox",
+      type: "select",
       options: [
         { label: "Active", value: "1" },
         { label: "Inactive", value: "0" },
@@ -80,7 +80,7 @@ export default function Users({ data }: UsersProps) {
             <h1 className="text-2xl font-bold">Users</h1>
             <DataTable
               columns={columns}
-              data={data.data}
+              data={data.items}
               filterComponents={filters}
               meta={data.meta}
               searchKey="search"

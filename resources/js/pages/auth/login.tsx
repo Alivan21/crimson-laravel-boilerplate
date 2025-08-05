@@ -2,12 +2,12 @@ import { Head, useForm } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
 import { FormEventHandler } from "react";
 
+import { ROUTES } from "@/common/routes";
 import TextLink from "@/components/common/text-link";
 import { FormCheckbox } from "@/components/forms/checkbox";
 import { FormInput } from "@/components/forms/input";
 import { Button } from "@/components/ui/button";
 import AuthLayout from "@/layouts/auth-layout";
-import { ROUTES } from "@/routes";
 import { TLoginForm } from "@/types/modules/auth";
 
 interface LoginProps {

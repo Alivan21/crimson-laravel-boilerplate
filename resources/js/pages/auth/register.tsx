@@ -2,11 +2,11 @@ import { Head, useForm } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
 import { FormEventHandler } from "react";
 
+import { ROUTES } from "@/common/routes";
 import TextLink from "@/components/common/text-link";
 import { FormInput } from "@/components/forms/input";
 import { Button } from "@/components/ui/button";
 import AuthLayout from "@/layouts/auth-layout";
-import { ROUTES } from "@/routes";
 import { TRegisterForm } from "@/types/modules/auth";
 
 export default function Register() {

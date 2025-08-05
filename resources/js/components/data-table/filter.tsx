@@ -1,35 +1,35 @@
 import Combobox, { type Option } from "@/components/ui/combobox";
-import { DateTimePicker } from "@/components/ui/datetime-picker";
 import { cn } from "@/libs/clsx";
-import { ITableParams } from "@/types/shared";
+import { TDataTableParams } from "@/types/shared/response";
+import { DateTimePicker } from "../ui/datetime-picker";
 
-export interface FilterableColumn {
+export type TFilterableColumn = {
   id: string;
   title: string;
-  type: "combobox" | "datepicker";
+  type: "select" | "datepicker";
   options?: Option[];
   placeholder?: string;
   datePickerProps?: {
     granularity?: "year" | "month" | "day" | "second";
     hourCycle?: 12 | 24;
   };
-}
+};
 
-interface DataTableFilterProps {
-  columns: FilterableColumn[];
-  params: ITableParams;
-  setParams: (params: (prevParams: ITableParams) => ITableParams) => void;
+type DataTableFilterProps = {
+  columns: TFilterableColumn[];
+  params: TDataTableParams;
+  setParams: (params: (prevParams: TDataTableParams) => TDataTableParams) => void;
   className?: string;
-}
+};
 
 export function DataTableFilter({ columns, params, setParams, className }: DataTableFilterProps) {
   return (
-    <div className={cn("flex flex-wrap gap-2", className)}>
+    <div className={cn("grid grid-cols-1 gap-2 md:grid-cols-2", className)}>
       {columns.map((column) => {
-        if (column.type === "combobox") {
+        if (column.type === "select") {
           return (
             <Combobox
-              className="w-fit"
+              className="w-full min-w-0"
               key={column.id}
               onChange={(option: Option | undefined) => {
                 setParams((prev) => ({
@@ -47,12 +47,29 @@ export function DataTableFilter({ columns, params, setParams, className }: DataT
         if (column.type === "datepicker") {
           return (
             <DateTimePicker
-              className="w-fit"
+              className="w-full min-w-0"
               key={column.id}
               onChange={(date) => {
+                let value: string | undefined;
+                if (date) {
+                  if (column.datePickerProps?.granularity === "year") {
+                    value = date.getFullYear().toString();
+                  } else if (column.datePickerProps?.granularity === "month") {
+                    const year = date.getFullYear();
+                    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+                    value = `${year}-${month}`;
+                  } else if (column.datePickerProps?.granularity === "day") {
+                    const year = date.getFullYear();
+                    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+                    const day = date.getDate().toString().padStart(2, "0");
+                    value = `${year}-${month}-${day}`;
+                  } else {
+                    value = date.toISOString();
+                  }
+                }
                 setParams((prev) => ({
                   ...prev,
-                  [column.id]: date?.toISOString(),
+                  [column.id]: value,
                 }));
               }}
               placeholder={column.placeholder || `Filter by ${column.title}`}

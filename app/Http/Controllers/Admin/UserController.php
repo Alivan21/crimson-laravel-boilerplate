@@ -13,29 +13,15 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $filters = request()->query('filters', []);
-        $sort = str_replace(
-            ['name', 'is_active'],
-            ['name', 'is_active'],
-            request()->query('col')
-        );
-        $data = DataTable::query(User::query())
-            ->allowedFilters(['name', 'is_active'])
-            ->allowedSorts(['name', 'is_active'])
+        $data = DataTable::make(User::query())
             ->searchable(['name', 'email'])
-            ->applySort($sort)
-            ->applyFilters($filters)
-            ->make();
-
-        $response = collect([
-            'data' => $data->items(),
-            'meta' => collect($data)->except('data'),
-        ]);
+            ->sortable(['name', 'email'])
+            ->getResponse($request);
 
         return Inertia::render('admin/users/index', [
-            'data' => $response
+            'data' => $data
         ]);
     }
 

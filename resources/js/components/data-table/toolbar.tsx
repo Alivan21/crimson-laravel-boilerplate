@@ -1,15 +1,15 @@
 import { Input } from "@/components/ui/input";
-import { ITableParams } from "@/types/shared";
+import { TDataTableParams } from "@/types/shared/response";
 import { Search } from "lucide-react";
-import { DataTableFilter, type FilterableColumn } from "./filter";
+import { DataTableFilter, type TFilterableColumn } from "./filter";
 
-interface DataTableToolbarProps {
+type DataTableToolbarProps = {
   searchPlaceholder: string;
   searchKey: string;
-  params: ITableParams;
-  setParams: (params: (prevParams: ITableParams) => ITableParams) => void;
-  filterComponents?: FilterableColumn[];
-}
+  params: TDataTableParams;
+  setParams: (params: (prevParams: TDataTableParams) => TDataTableParams) => void;
+  filterComponents?: TFilterableColumn[];
+};
 
 export function DataTableToolbar({
   searchPlaceholder,
@@ -19,10 +19,7 @@ export function DataTableToolbar({
   filterComponents,
 }: DataTableToolbarProps) {
   return (
-    <div className="flex flex-wrap items-center gap-2 lg:flex-nowrap">
-      {filterComponents && filterComponents.length > 0 && (
-        <DataTableFilter columns={filterComponents} params={params} setParams={setParams} />
-      )}
+    <div className="space-y-3 md:space-y-4">
       <div className="relative w-full">
         <Search className="text-muted-foreground absolute top-2.5 left-2 h-4 w-4" />
         <Input
@@ -34,9 +31,18 @@ export function DataTableToolbar({
             }))
           }
           placeholder={searchPlaceholder}
-          value={params[searchKey] || ""}
+          value={params[searchKey]?.toString() || ""}
         />
       </div>
+
+      {filterComponents && filterComponents.length > 0 && (
+        <DataTableFilter
+          className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+          columns={filterComponents}
+          params={params}
+          setParams={setParams}
+        />
+      )}
     </div>
   );
 }

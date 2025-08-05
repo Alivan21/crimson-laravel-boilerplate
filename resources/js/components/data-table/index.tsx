@@ -6,33 +6,34 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import useDebouncedSearch from "@/hooks/data-table/use-debounce-search";
-import { IMeta, ITableParams } from "@/types/shared";
+import useDebounceSearchParams from "@/hooks/data-table/use-debounce-search-params";
+import { TDataTableParams, TMeta } from "@/types/shared/response";
+import { usePage } from "@inertiajs/react";
 import * as React from "react";
 import { useCallback } from "react";
-import { type FilterableColumn } from "./filter";
+import { type TFilterableColumn } from "./filter";
 import { DataTablePagination } from "./pagination";
 import { DataTableSortHeader } from "./sort-header";
 import { DataTableToolbar } from "./toolbar";
 
-export interface Column<TData> {
+export type TColumn<TData> = {
   id: string;
   header: string;
   accessorKey?: keyof TData;
-  cell?: (row: TData, index?: number) => React.ReactNode;
+  cell?: (row: TData, index: number) => React.ReactNode;
   enableSorting?: boolean;
   width?: string | number;
-}
+};
 
-interface DataTableProps<TData> {
-  columns: Column<TData>[];
+type DataTableProps<TData> = {
+  columns: TColumn<TData>[];
   data: TData[];
-  initialParams?: Partial<ITableParams>;
+  initialParams?: Partial<TDataTableParams>;
   searchPlaceholder?: string;
   searchKey?: string;
-  meta: IMeta;
-  filterComponents?: FilterableColumn[];
-}
+  meta: TMeta;
+  filterComponents?: TFilterableColumn[];
+};
 
 export function DataTable<TData>({
   columns,
@@ -43,14 +44,16 @@ export function DataTable<TData>({
   meta,
   filterComponents,
 }: DataTableProps<TData>) {
-  const { params, setParams } = useDebouncedSearch(route(route().current()!)!, initialParams);
+  const { url } = usePage();
+  const currentUrl = url.split("?")[0];
+  const { params, setParams } = useDebounceSearchParams(currentUrl, initialParams);
 
   const handleSort = useCallback(
     (column: string, direction: "asc" | "desc" | undefined) => {
       setParams((prev) => ({
         ...prev,
-        col: column,
-        sort: direction,
+        sort_by: column,
+        order: direction,
       }));
     },
     [setParams],
@@ -71,14 +74,20 @@ export function DataTable<TData>({
             <TableRow className="divide-x divide-gray-200">
               {columns.map((column) => (
                 <TableHead
-                  className="bg-muted px-2.5 text-sm font-bold whitespace-nowrap text-black"
+                  className="bg-muted max-w-fit px-2.5 text-sm font-bold text-black"
                   key={column.id}
-                  style={column.width ? { width: column.width } : undefined}
+                  style={
+                    column.width
+                      ? {
+                          width: column.width,
+                        }
+                      : undefined
+                  }
                 >
                   <DataTableSortHeader
                     column={column}
-                    currentColumn={params.col}
-                    currentSort={params.sort}
+                    currentColumn={params.sort_by as string}
+                    currentSort={params.order as "asc" | "desc"}
                     sort={handleSort}
                   />
                 </TableHead>

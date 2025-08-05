@@ -1,6 +1,6 @@
+import { ROUTES } from "@/common/routes";
 import { PlaceholderPattern } from "@/components/ui/placeholder-pattern";
 import AppLayout from "@/layouts/app-layout";
-import { ROUTES } from "@/routes";
 import { type IBreadcrumbItem } from "@/types/shared/navigation";
 import { Head } from "@inertiajs/react";
 

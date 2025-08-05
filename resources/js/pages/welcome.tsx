@@ -1,4 +1,4 @@
-import { ROUTES } from "@/routes";
+import { ROUTES } from "@/common/routes";
 import { type ISharedData } from "@/types/shared";
 import { Head, Link, usePage } from "@inertiajs/react";
 

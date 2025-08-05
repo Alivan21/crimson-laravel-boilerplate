@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 
 interface SortParams {
-  sort?: "asc" | "desc";
-  col?: string;
+  order?: "asc" | "desc";
+  sort_by?: string;
 }
 
 const useSorting = (setParams: (params: (prevParams: SortParams) => SortParams) => void) => {
@@ -10,8 +10,8 @@ const useSorting = (setParams: (params: (prevParams: SortParams) => SortParams) 
     (column: string) => {
       setParams((prevParams) => ({
         ...prevParams,
-        col: column,
-        sort: prevParams.sort === "asc" ? "desc" : "asc",
+        sort_by: column,
+        order: prevParams.order === "asc" ? "desc" : "asc",
       }));
     },
     [setParams],

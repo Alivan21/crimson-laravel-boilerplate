@@ -1,6 +1,7 @@
 import { useForm } from "@inertiajs/react";
 import { FormEventHandler, useRef } from "react";
 
+import { ROUTES } from "@/common/routes";
 import HeadingSmall from "@/components/common/heading-small";
 import InputError from "@/components/forms/input-error";
 import { Button } from "@/components/ui/button";
@@ -15,7 +16,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ROUTES } from "@/routes";
 
 export default function DeleteUser() {
   const passwordInput = useRef<HTMLInputElement>(null);
