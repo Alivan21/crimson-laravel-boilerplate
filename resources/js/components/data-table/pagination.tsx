@@ -64,108 +64,102 @@ export function DataTablePagination({ setParams, meta }: DataTablePaginationProp
   const pageSizeOptions = useMemo(() => [10, 20, 30, 50], []);
 
   return (
-    <div className="flex w-full flex-col items-center justify-between gap-4 sm:flex-row">
-      {/* Results Info */}
-      <div className="text-muted-foreground order-2 text-sm sm:order-1">
-        {meta.from} - {meta.to} of {meta.total} items
-      </div>
-
-      {/* Pagination Controls - Mobile optimized */}
-      <div className="order-1 flex flex-col items-center gap-4 sm:order-2 sm:flex-row">
-        {/* Rows per page selector */}
-        <div className="flex items-center space-x-2">
-          <p className="text-foreground text-sm font-medium whitespace-nowrap">Rows per page</p>
-          <Select onValueChange={handleLimitChange} value={`${limit}`}>
-            <SelectTrigger className="h-9 w-[70px]">
-              <SelectValue placeholder={limit} />
-            </SelectTrigger>
-            <SelectContent>
-              {pageSizeOptions.map((pageSize) => (
-                <SelectItem key={pageSize} value={`${pageSize}`}>
-                  {pageSize}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+    <div className="order-1 flex flex-col items-center justify-between gap-4 sm:flex-row">
+      <div className="flex items-center gap-2">
+        <div className="text-muted-foreground text-sm">
+          {meta.from} - {meta.to} of {meta.total} items
         </div>
-
-        {/* Page Navigation */}
-        <Pagination>
-          <PaginationContent className="flex-wrap gap-1">
-            <PaginationItem>
-              <PaginationLink
-                aria-label="Go to first page"
-                className="h-9 w-9 p-0"
-                disabled={page === 1}
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handlePageChange(1);
-                }}
-              >
-                <ChevronFirst className="h-4 w-4" />
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink
-                aria-label="Go to previous page"
-                className="h-9 w-9 p-0"
-                disabled={page === 1}
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handlePageChange(page - 1);
-                }}
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </PaginationLink>
-            </PaginationItem>
-            {pageNumbers.map((pageNumber) => (
-              <PaginationItem key={pageNumber}>
-                <PaginationLink
-                  className="h-9 w-9 p-0"
-                  href="#"
-                  isActive={pageNumber === page}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handlePageChange(pageNumber);
-                  }}
-                >
-                  {pageNumber}
-                </PaginationLink>
-              </PaginationItem>
+        <p className="text-foreground text-sm font-medium whitespace-nowrap">Rows per page</p>
+        <Select onValueChange={handleLimitChange} value={`${limit}`}>
+          <SelectTrigger className="h-9 w-[70px]">
+            <SelectValue placeholder={limit} />
+          </SelectTrigger>
+          <SelectContent>
+            {pageSizeOptions.map((pageSize) => (
+              <SelectItem key={pageSize} value={`${pageSize}`}>
+                {pageSize}
+              </SelectItem>
             ))}
-            <PaginationItem>
-              <PaginationLink
-                aria-label="Go to next page"
-                className="h-9 w-9 p-0"
-                disabled={page === meta.last_page}
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handlePageChange(page + 1);
-                }}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink
-                aria-label="Go to last page"
-                className="h-9 w-9 p-0"
-                disabled={page === meta.last_page}
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handlePageChange(meta.last_page);
-                }}
-              >
-                <ChevronLast className="h-4 w-4" />
-              </PaginationLink>
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+          </SelectContent>
+        </Select>
       </div>
+
+      {/* Page Navigation */}
+      <Pagination>
+        <PaginationContent className="flex-wrap gap-1">
+          <PaginationItem>
+            <PaginationLink
+              aria-label="Go to first page"
+              className="h-9 w-9 p-0"
+              disabled={page === 1}
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                handlePageChange(1);
+              }}
+            >
+              <ChevronFirst className="h-4 w-4" />
+            </PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink
+              aria-label="Go to previous page"
+              className="h-9 w-9 p-0"
+              disabled={page === 1}
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                handlePageChange(page - 1);
+              }}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </PaginationLink>
+          </PaginationItem>
+          {pageNumbers.map((pageNumber) => (
+            <PaginationItem key={pageNumber}>
+              <PaginationLink
+                className="h-9 w-9 p-0"
+                href="#"
+                isActive={pageNumber === page}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handlePageChange(pageNumber);
+                }}
+              >
+                {pageNumber}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+          <PaginationItem>
+            <PaginationLink
+              aria-label="Go to next page"
+              className="h-9 w-9 p-0"
+              disabled={page === meta.last_page}
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                handlePageChange(page + 1);
+              }}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink
+              aria-label="Go to last page"
+              className="h-9 w-9 p-0"
+              disabled={page === meta.last_page}
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                handlePageChange(meta.last_page);
+              }}
+            >
+              <ChevronLast className="h-4 w-4" />
+            </PaginationLink>
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </div>
   );
 }

@@ -9,6 +9,10 @@ import { IBreadcrumbItem } from "@/types/shared/navigation";
 
 const breadcrumbs: IBreadcrumbItem[] = [
   {
+    title: "Dashboard",
+    href: route(ROUTES.ADMIN.DASHBOARD),
+  },
+  {
     title: "Users",
     href: route(ROUTES.ADMIN.USERS.INDEX),
   },
