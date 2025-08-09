@@ -6,8 +6,8 @@ import HeadingSmall from "@/components/common/heading-small";
 import { FormInput } from "@/components/forms/input";
 import { Button } from "@/components/ui/button";
 import AppLayout from "@/layouts/app-layout";
-import SettingsLayout from "@/layouts/settings/layout";
 import { type IBreadcrumbItem } from "@/types/shared/navigation";
+import SettingsLayout from "./_layout";
 
 const breadcrumbs: IBreadcrumbItem[] = [
   {

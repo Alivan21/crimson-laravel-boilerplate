@@ -8,10 +8,10 @@ import DeleteUser from "@/components/delete-user";
 import { FormInput } from "@/components/forms/input";
 import { Button } from "@/components/ui/button";
 import AppLayout from "@/layouts/app-layout";
-import SettingsLayout from "@/layouts/settings/layout";
 import { TProfileForm } from "@/types/modules/admin/settings";
 import { ISharedData } from "@/types/shared";
 import { IBreadcrumbItem } from "@/types/shared/navigation";
+import SettingsLayout from "./_layout";
 
 const breadcrumbs: IBreadcrumbItem[] = [
   {

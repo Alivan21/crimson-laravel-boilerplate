@@ -50,7 +50,7 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
         <Link
           as="button"
           className="block w-full cursor-pointer"
-          href={route("logout")}
+          href={route(ROUTES.AUTH.LOGOUT)}
           method="post"
           onClick={handleLogout}
         >

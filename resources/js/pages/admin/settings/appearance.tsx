@@ -3,7 +3,7 @@ import HeadingSmall from "@/components/common/heading-small";
 import { type IBreadcrumbItem } from "@/types/shared/navigation";
 
 import AppLayout from "@/layouts/app-layout";
-import SettingsLayout from "@/layouts/settings/layout";
+import SettingsLayout from "./_layout";
 
 const breadcrumbs: IBreadcrumbItem[] = [
   {
