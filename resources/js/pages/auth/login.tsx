@@ -40,10 +40,10 @@ export default function Login({ status, can_reset_password }: LoginProps) {
 
   return (
     <AuthLayout
-      description="Enter your email and password below to log in"
-      title="Log in to your account"
+      description="Enter your email and password below to login"
+      title="Login to your account"
     >
-      <Head title="Log in" />
+      <Head title="Login" />
 
       <Form {...form}>
         <form className="flex flex-col gap-4" onSubmit={form.handleSubmit(handleSubmit)}>
@@ -82,7 +82,7 @@ export default function Login({ status, can_reset_password }: LoginProps) {
 
             <Button className="w-full" disabled={processing} type="submit">
               {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
-              Log in
+              Login
             </Button>
           </div>
 

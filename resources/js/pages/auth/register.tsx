@@ -92,7 +92,7 @@ export default function Register() {
           </div>
 
           <div className="text-muted-foreground text-center text-sm">
-            Already have an account? <TextLink href={route(ROUTES.AUTH.LOGIN)}>Log in</TextLink>
+            Already have an account? <TextLink href={route(ROUTES.AUTH.LOGIN)}>Login</TextLink>
           </div>
         </form>
       </Form>
