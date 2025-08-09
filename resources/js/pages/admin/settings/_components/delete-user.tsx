@@ -1,11 +1,8 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm as useInertiaForm } from "@inertiajs/react";
-import { useRef } from "react";
-import { useForm } from "react-hook-form";
 
 import { ROUTES } from "@/common/routes";
 import HeadingSmall from "@/components/common/heading-small";
-import Input from "@/components/forms/input";
+import { TextField } from "@/components/forms/fields/text-field";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,15 +13,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { useFormValidationErrors } from "@/hooks/forms/use-form-validation-error";
+import { useZodForm } from "@/hooks/forms/use-zod-form";
 import { z } from "zod";
 
 const deleteUserSchema = z.object({ password: z.string().min(1, "Password is required") });
@@ -32,11 +23,9 @@ const deleteUserSchema = z.object({ password: z.string().min(1, "Password is req
 type DeleteUserForm = z.infer<typeof deleteUserSchema>;
 
 export default function DeleteUser() {
-  const passwordInput = useRef<HTMLInputElement>(null);
-
-  const form = useForm<DeleteUserForm>({
+  const form = useZodForm<DeleteUserForm>({
     defaultValues: { password: "" },
-    resolver: zodResolver(deleteUserSchema),
+    schema: deleteUserSchema,
   });
   useFormValidationErrors(form);
 
@@ -55,7 +44,7 @@ export default function DeleteUser() {
     destroy(route(ROUTES.ADMIN.SETTINGS.PROFILE.DESTROY), {
       preserveScroll: true,
       onSuccess: () => closeModal(),
-      onError: () => passwordInput.current?.focus(),
+      onError: () => form.setFocus("password"),
       onFinish: () => reset(),
     });
   };
@@ -91,30 +80,13 @@ export default function DeleteUser() {
             <Form {...form}>
               <form className="space-y-6" onSubmit={form.handleSubmit(deleteUser)}>
                 <div className="grid gap-2">
-                  <FormField
+                  <TextField
+                    autoComplete="current-password"
                     control={form.control}
+                    label="Password"
                     name="password"
-                    render={({ field }) => {
-                      const { ref, ...rest } = field;
-                      return (
-                        <FormItem>
-                          <FormLabel className="sr-only">Password</FormLabel>
-                          <FormControl>
-                            <Input
-                              autoComplete="current-password"
-                              placeholder="Password"
-                              ref={(el) => {
-                                ref(el);
-                                passwordInput.current = el as HTMLInputElement | null;
-                              }}
-                              type="password"
-                              {...rest}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      );
-                    }}
+                    placeholder="Password"
+                    type="password"
                   />
                 </div>
 

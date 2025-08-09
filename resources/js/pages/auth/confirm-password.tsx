@@ -1,27 +1,19 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Head, useForm as useInertiaForm } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
-import { useForm } from "react-hook-form";
 
 import { ROUTES } from "@/common/routes";
-import Input from "@/components/forms/input";
+import { TextField } from "@/components/forms/fields/text-field";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { useFormValidationErrors } from "@/hooks/forms/use-form-validation-error";
+import { useZodForm } from "@/hooks/forms/use-zod-form";
 import AuthLayout from "@/layouts/auth-layout";
 import { TConfirmPasswordForm, confirmPasswordSchema } from "@/types/modules/auth";
 
 export default function ConfirmPassword() {
-  const form = useForm<TConfirmPasswordForm>({
+  const form = useZodForm<TConfirmPasswordForm>({
     defaultValues: { password: "" },
-    resolver: zodResolver(confirmPasswordSchema),
+    schema: confirmPasswordSchema,
   });
 
   useFormValidationErrors(form);
@@ -44,34 +36,22 @@ export default function ConfirmPassword() {
       <Head title="Confirm password" />
 
       <Form {...form}>
-        <form className="flex flex-col gap-6" onSubmit={form.handleSubmit(handleSubmit)}>
-          <div className="space-y-6">
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      autoComplete="current-password"
-                      disabled={processing}
-                      placeholder="Password"
-                      type="password"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <form className="flex flex-col gap-5" onSubmit={form.handleSubmit(handleSubmit)}>
+          <TextField
+            autoComplete="current-password"
+            control={form.control}
+            disabled={processing}
+            label="Password"
+            name="password"
+            placeholder="Password"
+            type="password"
+          />
 
-            <div className="flex items-center">
-              <Button className="w-full" disabled={processing} type="submit">
-                {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
-                Confirm password
-              </Button>
-            </div>
+          <div className="flex items-center">
+            <Button className="w-full" disabled={processing} type="submit">
+              {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
+              Confirm password
+            </Button>
           </div>
         </form>
       </Form>

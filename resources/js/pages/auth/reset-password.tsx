@@ -1,19 +1,11 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Head, useForm as useInertiaForm } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
-import { useForm } from "react-hook-form";
 
 import { ROUTES } from "@/common/routes";
-import Input from "@/components/forms/input";
+import { TextField } from "@/components/forms/fields/text-field";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
+import { useZodForm } from "@/hooks/forms/use-zod-form";
 import AuthLayout from "@/layouts/auth-layout";
 import { TResetPasswordForm, resetPasswordSchema } from "@/types/modules/auth";
 
@@ -23,14 +15,14 @@ type ResetPasswordProps = {
 };
 
 export default function ResetPassword({ token, email }: ResetPasswordProps) {
-  const form = useForm<TResetPasswordForm>({
+  const form = useZodForm<TResetPasswordForm>({
     defaultValues: {
-      token,
       email,
       password: "",
       password_confirmation: "",
+      token,
     },
-    resolver: zodResolver(resetPasswordSchema),
+    schema: resetPasswordSchema,
   });
 
   const { post, processing, transform } = useInertiaForm<TResetPasswordForm>({
@@ -51,66 +43,36 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
     <AuthLayout description="Enter your new password below" title="Reset password">
       <Head title="Reset Password" />
       <Form {...form}>
-        <form className="flex flex-col gap-6" onSubmit={form.handleSubmit(handleSubmit)}>
-          <div className="grid gap-6">
-            <FormField
+        <form className="flex flex-col gap-4" onSubmit={form.handleSubmit(handleSubmit)}>
+          <div className="grid gap-4">
+            <TextField
+              autoComplete="username"
               control={form.control}
+              disabled={processing}
+              label="Email address"
               name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Email address</FormLabel>
-                  <FormControl>
-                    <Input
-                      autoComplete="username"
-                      disabled={processing}
-                      placeholder="Email address"
-                      type="email"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              placeholder="Email address"
+              type="email"
             />
 
-            <FormField
+            <TextField
+              autoComplete="new-password"
               control={form.control}
+              disabled={processing}
+              label="Password"
               name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      autoComplete="new-password"
-                      disabled={processing}
-                      placeholder="New password"
-                      type="password"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              placeholder="New password"
+              type="password"
             />
 
-            <FormField
+            <TextField
+              autoComplete="new-password"
               control={form.control}
+              disabled={processing}
+              label="Confirm Password"
               name="password_confirmation"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Confirm Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      autoComplete="new-password"
-                      disabled={processing}
-                      placeholder="Confirm password"
-                      type="password"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              placeholder="Confirm password"
+              type="password"
             />
           </div>
 

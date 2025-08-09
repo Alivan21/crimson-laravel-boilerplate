@@ -1,20 +1,12 @@
 import { Transition } from "@headlessui/react";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useForm as useInertiaForm, usePage } from "@inertiajs/react";
-import { useForm } from "react-hook-form";
 
 import { ROUTES } from "@/common/routes";
 import HeadingSmall from "@/components/common/heading-small";
-import Input from "@/components/forms/input";
+import { TextField } from "@/components/forms/fields/text-field";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
+import { useZodForm } from "@/hooks/forms/use-zod-form";
 import AppLayout from "@/layouts/app-layout";
 import { TProfileForm, profileSchema } from "@/types/modules/admin/settings";
 import { ISharedData } from "@/types/shared";
@@ -37,9 +29,9 @@ type ProfileProps = {
 export default function Profile({ must_verify_email, status }: ProfileProps) {
   const { auth } = usePage<ISharedData>().props;
 
-  const form = useForm<TProfileForm>({
-    defaultValues: { name: auth.user.name, email: auth.user.email },
-    resolver: zodResolver(profileSchema),
+  const form = useZodForm<TProfileForm>({
+    defaultValues: { email: auth.user.email, name: auth.user.name },
+    schema: profileSchema,
   });
 
   const { patch, processing, recentlySuccessful, transform } = useInertiaForm<TProfileForm>({
@@ -65,44 +57,24 @@ export default function Profile({ must_verify_email, status }: ProfileProps) {
 
           <Form {...form}>
             <form className="space-y-6" onSubmit={form.handleSubmit(handleSubmit)}>
-              <FormField
+              <TextField
+                autoComplete="name"
                 control={form.control}
+                disabled={processing}
+                label="Name"
                 name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel required>Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        autoComplete="name"
-                        disabled={processing}
-                        placeholder="Full name"
-                        type="text"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                placeholder="Full name"
+                type="text"
               />
 
-              <FormField
+              <TextField
+                autoComplete="username"
                 control={form.control}
+                disabled={processing}
+                label="Email address"
                 name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel required>Email address</FormLabel>
-                    <FormControl>
-                      <Input
-                        autoComplete="username"
-                        disabled={processing}
-                        placeholder="Email address"
-                        type="email"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                placeholder="Email address"
+                type="email"
               />
 
               {must_verify_email && auth.user.email_verified_at === null && (

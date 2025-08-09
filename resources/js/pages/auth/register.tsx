@@ -1,33 +1,25 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Head, useForm as useInertiaForm } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
-import { useForm } from "react-hook-form";
 
 import { ROUTES } from "@/common/routes";
 import TextLink from "@/components/common/text-link";
-import Input from "@/components/forms/input";
+import { TextField } from "@/components/forms/fields/text-field";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { useFormValidationErrors } from "@/hooks/forms/use-form-validation-error";
+import { useZodForm } from "@/hooks/forms/use-zod-form";
 import AuthLayout from "@/layouts/auth-layout";
 import { TRegisterForm, registerSchema } from "@/types/modules/auth";
 
 export default function Register() {
-  const form = useForm<TRegisterForm>({
+  const form = useZodForm<TRegisterForm>({
     defaultValues: {
-      name: "",
       email: "",
+      name: "",
       password: "",
       password_confirmation: "",
     },
-    resolver: zodResolver(registerSchema),
+    schema: registerSchema,
   });
 
   useFormValidationErrors(form);
@@ -51,89 +43,49 @@ export default function Register() {
     >
       <Head title="Register" />
       <Form {...form}>
-        <form className="flex flex-col gap-6" onSubmit={form.handleSubmit(handleSubmit)}>
-          <div className="grid gap-6">
-            <FormField
+        <form className="flex flex-col gap-4" onSubmit={form.handleSubmit(handleSubmit)}>
+          <div className="grid gap-5">
+            <TextField
+              autoComplete="name"
               control={form.control}
+              disabled={processing}
+              label="Name"
               name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Name</FormLabel>
-                  <FormControl>
-                    <Input
-                      autoComplete="name"
-                      disabled={processing}
-                      placeholder="Full name"
-                      type="text"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              placeholder="Full name"
+              type="text"
             />
 
-            <FormField
+            <TextField
+              autoComplete="email"
               control={form.control}
+              disabled={processing}
+              label="Email address"
               name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Email address</FormLabel>
-                  <FormControl>
-                    <Input
-                      autoComplete="email"
-                      disabled={processing}
-                      placeholder="email@example.com"
-                      type="email"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              placeholder="email@example.com"
+              type="email"
             />
 
-            <FormField
+            <TextField
+              autoComplete="new-password"
               control={form.control}
+              disabled={processing}
+              label="Password"
               name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      autoComplete="new-password"
-                      disabled={processing}
-                      placeholder="Password"
-                      type="password"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              placeholder="Password"
+              type="password"
             />
 
-            <FormField
+            <TextField
+              autoComplete="new-password"
               control={form.control}
+              disabled={processing}
+              label="Confirm Password"
               name="password_confirmation"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Confirm Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      autoComplete="new-password"
-                      disabled={processing}
-                      placeholder="Confirm password"
-                      type="password"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              placeholder="Confirm password"
+              type="password"
             />
 
-            <Button className="mt-2 w-full" disabled={processing} type="submit">
+            <Button className="w-full" disabled={processing} type="submit">
               {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
               Create account
             </Button>

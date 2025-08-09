@@ -1,22 +1,14 @@
 import { Transition } from "@headlessui/react";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm as useInertiaForm } from "@inertiajs/react";
 import { useRef } from "react";
-import { useForm } from "react-hook-form";
 
 import { ROUTES } from "@/common/routes";
 import HeadingSmall from "@/components/common/heading-small";
-import Input from "@/components/forms/input";
+import { TextField } from "@/components/forms/fields/text-field";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { useFormValidationErrors } from "@/hooks/forms/use-form-validation-error";
+import { useZodForm } from "@/hooks/forms/use-zod-form";
 import AppLayout from "@/layouts/app-layout";
 import { TPasswordForm, passwordSchema } from "@/types/modules/admin/settings";
 import { type IBreadcrumbItem } from "@/types/shared/navigation";
@@ -33,13 +25,13 @@ export default function Password() {
   const passwordInput = useRef<HTMLInputElement>(null);
   const currentPasswordInput = useRef<HTMLInputElement>(null);
 
-  const form = useForm<TPasswordForm>({
+  const form = useZodForm<TPasswordForm>({
     defaultValues: {
       current_password: "",
       password: "",
       password_confirmation: "",
     },
-    resolver: zodResolver(passwordSchema),
+    schema: passwordSchema,
   });
   useFormValidationErrors(form);
 
@@ -79,75 +71,34 @@ export default function Password() {
 
           <Form {...form}>
             <form className="space-y-6" onSubmit={form.handleSubmit(updatePassword)}>
-              <FormField
+              <TextField
+                autoComplete="current-password"
                 control={form.control}
+                disabled={processing}
+                label="Current Password"
                 name="current_password"
-                render={({ field }) => {
-                  const { ref, ...rest } = field;
-                  return (
-                    <FormItem>
-                      <FormLabel required>Current Password</FormLabel>
-                      <FormControl>
-                        <Input
-                          autoComplete="current-password"
-                          placeholder="Current password"
-                          ref={(el) => {
-                            ref(el);
-                            currentPasswordInput.current = el as HTMLInputElement | null;
-                          }}
-                          type="password"
-                          {...rest}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  );
-                }}
+                placeholder="Current password"
+                type="password"
               />
 
-              <FormField
+              <TextField
+                autoComplete="new-password"
                 control={form.control}
+                disabled={processing}
+                label="New Password"
                 name="password"
-                render={({ field }) => {
-                  const { ref, ...rest } = field;
-                  return (
-                    <FormItem>
-                      <FormLabel required>New Password</FormLabel>
-                      <FormControl>
-                        <Input
-                          autoComplete="new-password"
-                          placeholder="New password"
-                          ref={(el) => {
-                            ref(el);
-                            passwordInput.current = el as HTMLInputElement | null;
-                          }}
-                          type="password"
-                          {...rest}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  );
-                }}
+                placeholder="New password"
+                type="password"
               />
 
-              <FormField
+              <TextField
+                autoComplete="new-password"
                 control={form.control}
+                disabled={processing}
+                label="Confirm Password"
                 name="password_confirmation"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel required>Confirm Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        autoComplete="new-password"
-                        placeholder="Confirm password"
-                        type="password"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                placeholder="Confirm password"
+                type="password"
               />
 
               <div className="flex items-center gap-4">

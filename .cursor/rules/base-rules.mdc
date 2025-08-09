@@ -30,8 +30,8 @@ alwaysApply: true
 ## React/TypeScript/Frontend
 
 - Use React 19+ features and hooks when appropriate.
-- Write TypeScript code with proper type definitions and interfaces.
 - Always use type instead of interface for type definitions.
+- Write TypeScript code with proper type definitions.
 - Use functional components with hooks instead of class components.
 - Avoid using `forwardRef` unless absolutely necessary.
 - Implement proper error boundaries and error handling.
@@ -127,7 +127,7 @@ alwaysApply: true
 - Write descriptive commit messages and comments.
 - Use proper naming conventions for files, classes, and methods.
 - Implement proper type hints and return types in PHP.
-- Use proper TypeScript interfaces and types.
+- Use proper TypeScript types.
 
 ## Security Best Practices
 

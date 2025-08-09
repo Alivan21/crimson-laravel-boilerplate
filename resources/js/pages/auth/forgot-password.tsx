@@ -1,21 +1,13 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Head, useForm as useInertiaForm } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
-import { useForm } from "react-hook-form";
 
 import { ROUTES } from "@/common/routes";
 import TextLink from "@/components/common/text-link";
-import Input from "@/components/forms/input";
+import { TextField } from "@/components/forms/fields/text-field";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { useFormValidationErrors } from "@/hooks/forms/use-form-validation-error";
+import { useZodForm } from "@/hooks/forms/use-zod-form";
 import AuthLayout from "@/layouts/auth-layout";
 import { TForgotPasswordForm, forgotPasswordSchema } from "@/types/modules/auth";
 
@@ -24,9 +16,9 @@ type ForgotPasswordProps = {
 };
 
 export default function ForgotPassword({ status }: ForgotPasswordProps) {
-  const form = useForm<TForgotPasswordForm>({
+  const form = useZodForm<TForgotPasswordForm>({
     defaultValues: { email: "" },
-    resolver: zodResolver(forgotPasswordSchema),
+    schema: forgotPasswordSchema,
   });
 
   useFormValidationErrors(form);
@@ -51,25 +43,15 @@ export default function ForgotPassword({ status }: ForgotPasswordProps) {
 
       <div className="space-y-6">
         <Form {...form}>
-          <form className="flex flex-col gap-6" onSubmit={form.handleSubmit(handleSubmit)}>
-            <FormField
+          <form className="flex flex-col gap-5" onSubmit={form.handleSubmit(handleSubmit)}>
+            <TextField
+              autoComplete="off"
               control={form.control}
+              disabled={processing}
+              label="Email address"
               name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Email address</FormLabel>
-                  <FormControl>
-                    <Input
-                      autoComplete="off"
-                      disabled={processing}
-                      placeholder="email@example.com"
-                      type="email"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              placeholder="email@example.com"
+              type="email"
             />
 
             <div className="flex items-center">

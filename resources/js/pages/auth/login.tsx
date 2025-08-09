@@ -1,22 +1,14 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Head, useForm as useInertiaForm } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
-import { useForm } from "react-hook-form";
 
 import { ROUTES } from "@/common/routes";
 import TextLink from "@/components/common/text-link";
-import Input from "@/components/forms/input";
+import { CheckboxField } from "@/components/forms/fields/checkbox-field";
+import { TextField } from "@/components/forms/fields/text-field";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { useFormValidationErrors } from "@/hooks/forms/use-form-validation-error";
+import { useZodForm } from "@/hooks/forms/use-zod-form";
 import AuthLayout from "@/layouts/auth-layout";
 import { TLoginForm, loginSchema } from "@/types/modules/auth";
 
@@ -26,9 +18,9 @@ type LoginProps = {
 };
 
 export default function Login({ status, can_reset_password }: LoginProps) {
-  const form = useForm<TLoginForm>({
+  const form = useZodForm<TLoginForm>({
     defaultValues: { email: "", password: "", remember: false },
-    resolver: zodResolver(loginSchema),
+    schema: loginSchema,
   });
 
   useFormValidationErrors(form);
@@ -54,76 +46,41 @@ export default function Login({ status, can_reset_password }: LoginProps) {
       <Head title="Log in" />
 
       <Form {...form}>
-        <form className="flex flex-col gap-6" onSubmit={form.handleSubmit(handleSubmit)}>
-          <div className="grid gap-6">
-            <FormField
+        <form className="flex flex-col gap-4" onSubmit={form.handleSubmit(handleSubmit)}>
+          <div className="grid gap-5">
+            <TextField
+              autoComplete="email"
               control={form.control}
+              disabled={processing}
+              label="Email address"
               name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>Email address</FormLabel>
-                  <FormControl>
-                    <Input
-                      autoComplete="email"
-                      disabled={processing}
-                      placeholder="email@example.com"
-                      type="email"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              placeholder="email@example.com"
+              type="email"
             />
 
-            <FormField
+            <TextField
+              autoComplete="current-password"
               control={form.control}
+              disabled={processing}
+              label="Password"
               name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="flex items-center justify-between">
-                    <FormLabel required>Password</FormLabel>
-                    {can_reset_password && (
-                      <TextLink href={route(ROUTES.AUTH.PASSWORD.REQUEST)}>
-                        Forgot password?
-                      </TextLink>
-                    )}
-                  </div>
-                  <FormControl>
-                    <Input
-                      autoComplete="current-password"
-                      disabled={processing}
-                      placeholder="Password"
-                      type="password"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              placeholder="Password"
+              type="password"
             />
+            {can_reset_password && (
+              <div className="-mt-3 text-right">
+                <TextLink href={route(ROUTES.AUTH.PASSWORD.REQUEST)}>Forgot password?</TextLink>
+              </div>
+            )}
 
-            <FormField
+            <CheckboxField
               control={form.control}
+              disabled={processing}
+              label="Remember me"
               name="remember"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="flex items-center gap-2">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        disabled={processing}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <FormLabel>Remember me</FormLabel>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
             />
 
-            <Button className="mt-4 w-full" disabled={processing} type="submit">
+            <Button className="w-full" disabled={processing} type="submit">
               {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
               Log in
             </Button>
