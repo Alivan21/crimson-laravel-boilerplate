@@ -1,9 +1,8 @@
-import { useForm } from "@inertiajs/react";
-import { FormEventHandler, useRef } from "react";
+import { useForm as useInertiaForm } from "@inertiajs/react";
 
 import { ROUTES } from "@/common/routes";
 import HeadingSmall from "@/components/common/heading-small";
-import InputError from "@/components/forms/input-error";
+import { TextField } from "@/components/forms/fields/text-field";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,28 +13,38 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Form } from "@/components/ui/form";
+import { useFormValidationErrors } from "@/hooks/forms/use-form-validation-error";
+import { useZodForm } from "@/hooks/forms/use-zod-form";
+import { z } from "zod";
+
+const deleteUserSchema = z.object({ password: z.string().min(1, "Password is required") });
+
+type DeleteUserForm = z.infer<typeof deleteUserSchema>;
 
 export default function DeleteUser() {
-  const passwordInput = useRef<HTMLInputElement>(null);
+  const form = useZodForm<DeleteUserForm>({
+    defaultValues: { password: "" },
+    schema: deleteUserSchema,
+  });
+  useFormValidationErrors(form);
+
   const {
-    data,
-    setData,
     delete: destroy,
     processing,
     reset,
-    errors,
     clearErrors,
-  } = useForm<Required<{ password: string }>>({ password: "" });
+    transform,
+  } = useInertiaForm<DeleteUserForm>({
+    password: "",
+  });
 
-  const deleteUser: FormEventHandler = (e) => {
-    e.preventDefault();
-
+  const deleteUser = (values: DeleteUserForm) => {
+    transform(() => values);
     destroy(route(ROUTES.ADMIN.SETTINGS.PROFILE.DESTROY), {
       preserveScroll: true,
       onSuccess: () => closeModal(),
-      onError: () => passwordInput.current?.focus(),
+      onError: () => form.setFocus("password"),
       onFinish: () => reset(),
     });
   };
@@ -68,38 +77,32 @@ export default function DeleteUser() {
               deleted. Please enter your password to confirm you would like to permanently delete
               your account.
             </DialogDescription>
-            <form className="space-y-6" onSubmit={deleteUser}>
-              <div className="grid gap-2">
-                <Label className="sr-only" htmlFor="password">
-                  Password
-                </Label>
+            <Form {...form}>
+              <form className="space-y-6" onSubmit={form.handleSubmit(deleteUser)}>
+                <div className="grid gap-2">
+                  <TextField
+                    autoComplete="current-password"
+                    control={form.control}
+                    label="Password"
+                    name="password"
+                    placeholder="Password"
+                    type="password"
+                  />
+                </div>
 
-                <Input
-                  autoComplete="current-password"
-                  id="password"
-                  name="password"
-                  onChange={(e) => setData("password", e.target.value)}
-                  placeholder="Password"
-                  ref={passwordInput}
-                  type="password"
-                  value={data.password}
-                />
+                <DialogFooter className="gap-2">
+                  <DialogClose asChild>
+                    <Button onClick={closeModal} variant="secondary">
+                      Cancel
+                    </Button>
+                  </DialogClose>
 
-                <InputError message={errors.password} />
-              </div>
-
-              <DialogFooter className="gap-2">
-                <DialogClose asChild>
-                  <Button onClick={closeModal} variant="secondary">
-                    Cancel
+                  <Button asChild disabled={processing} variant="destructive">
+                    <button type="submit">Delete account</button>
                   </Button>
-                </DialogClose>
-
-                <Button asChild disabled={processing} variant="destructive">
-                  <button type="submit">Delete account</button>
-                </Button>
-              </DialogFooter>
-            </form>
+                </DialogFooter>
+              </form>
+            </Form>
           </DialogContent>
         </Dialog>
       </div>

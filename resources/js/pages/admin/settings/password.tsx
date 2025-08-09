@@ -1,11 +1,16 @@
 import { Transition } from "@headlessui/react";
-import { useForm } from "@inertiajs/react";
-import { FormEventHandler, useRef } from "react";
+import { useForm as useInertiaForm } from "@inertiajs/react";
+import { useRef } from "react";
 
+import { ROUTES } from "@/common/routes";
 import HeadingSmall from "@/components/common/heading-small";
-import { FormInput } from "@/components/forms/input";
+import { TextField } from "@/components/forms/fields/text-field";
 import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
+import { useFormValidationErrors } from "@/hooks/forms/use-form-validation-error";
+import { useZodForm } from "@/hooks/forms/use-zod-form";
 import AppLayout from "@/layouts/app-layout";
+import { TPasswordForm, passwordSchema } from "@/types/modules/admin/settings";
 import { type IBreadcrumbItem } from "@/types/shared/navigation";
 import SettingsLayout from "./_layout";
 
@@ -20,16 +25,25 @@ export default function Password() {
   const passwordInput = useRef<HTMLInputElement>(null);
   const currentPasswordInput = useRef<HTMLInputElement>(null);
 
-  const { data, setData, errors, put, reset, processing, recentlySuccessful } = useForm({
+  const form = useZodForm<TPasswordForm>({
+    defaultValues: {
+      current_password: "",
+      password: "",
+      password_confirmation: "",
+    },
+    schema: passwordSchema,
+  });
+  useFormValidationErrors(form);
+
+  const { put, reset, processing, recentlySuccessful, transform } = useInertiaForm<TPasswordForm>({
     current_password: "",
     password: "",
     password_confirmation: "",
   });
 
-  const updatePassword: FormEventHandler = (e) => {
-    e.preventDefault();
-
-    put(route("password.update"), {
+  const updatePassword = (values: TPasswordForm) => {
+    transform(() => values);
+    put(route(ROUTES.ADMIN.SETTINGS.PASSWORD.UPDATE), {
       preserveScroll: true,
       onSuccess: () => reset(),
       onError: (errors) => {
@@ -55,61 +69,55 @@ export default function Password() {
             title="Update Password"
           />
 
-          <form className="space-y-6" onSubmit={updatePassword}>
-            <FormInput
-              autoComplete="current-password"
-              error={errors.current_password}
-              id="current_password"
-              label="Current Password"
-              onChange={(value) => setData("current_password", value)}
-              placeholder="Current password"
-              ref={currentPasswordInput}
-              required
-              type="password"
-              value={data.current_password}
-            />
+          <Form {...form}>
+            <form className="space-y-6" onSubmit={form.handleSubmit(updatePassword)}>
+              <TextField
+                autoComplete="current-password"
+                control={form.control}
+                disabled={processing}
+                label="Current Password"
+                name="current_password"
+                placeholder="Current password"
+                type="password"
+              />
 
-            <FormInput
-              autoComplete="new-password"
-              error={errors.password}
-              id="password"
-              label="New Password"
-              onChange={(value) => setData("password", value)}
-              placeholder="New password"
-              ref={passwordInput}
-              required
-              type="password"
-              value={data.password}
-            />
+              <TextField
+                autoComplete="new-password"
+                control={form.control}
+                disabled={processing}
+                label="New Password"
+                name="password"
+                placeholder="New password"
+                type="password"
+              />
 
-            <FormInput
-              autoComplete="new-password"
-              error={errors.password_confirmation}
-              id="password_confirmation"
-              label="Confirm Password"
-              onChange={(value) => setData("password_confirmation", value)}
-              placeholder="Confirm password"
-              required
-              type="password"
-              value={data.password_confirmation}
-            />
+              <TextField
+                autoComplete="new-password"
+                control={form.control}
+                disabled={processing}
+                label="Confirm Password"
+                name="password_confirmation"
+                placeholder="Confirm password"
+                type="password"
+              />
 
-            <div className="flex items-center gap-4">
-              <Button disabled={processing} type="submit">
-                Save
-              </Button>
+              <div className="flex items-center gap-4">
+                <Button disabled={processing} type="submit">
+                  Save
+                </Button>
 
-              <Transition
-                enter="transition ease-in-out"
-                enterFrom="opacity-0"
-                leave="transition ease-in-out"
-                leaveTo="opacity-0"
-                show={recentlySuccessful}
-              >
-                <p className="text-muted-foreground text-sm">Saved.</p>
-              </Transition>
-            </div>
-          </form>
+                <Transition
+                  enter="transition ease-in-out"
+                  enterFrom="opacity-0"
+                  leave="transition ease-in-out"
+                  leaveTo="opacity-0"
+                  show={recentlySuccessful}
+                >
+                  <p className="text-muted-foreground text-sm">Saved.</p>
+                </Transition>
+              </div>
+            </form>
+          </Form>
         </div>
       </SettingsLayout>
     </AppLayout>

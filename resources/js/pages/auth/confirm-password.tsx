@@ -1,24 +1,30 @@
-import { Head, useForm } from "@inertiajs/react";
+import { Head, useForm as useInertiaForm } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
-import { FormEventHandler } from "react";
 
 import { ROUTES } from "@/common/routes";
-import { FormInput } from "@/components/forms/input";
+import { TextField } from "@/components/forms/fields/text-field";
 import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
+import { useFormValidationErrors } from "@/hooks/forms/use-form-validation-error";
+import { useZodForm } from "@/hooks/forms/use-zod-form";
 import AuthLayout from "@/layouts/auth-layout";
+import { TConfirmPasswordForm, confirmPasswordSchema } from "@/types/modules/auth";
 
 export default function ConfirmPassword() {
-  const { data, setData, post, processing, errors, reset } = useForm<
-    Required<{ password: string }>
-  >({
-    password: "",
+  const form = useZodForm<TConfirmPasswordForm>({
+    defaultValues: { password: "" },
+    schema: confirmPasswordSchema,
   });
 
-  const submit: FormEventHandler = (e) => {
-    e.preventDefault();
+  useFormValidationErrors(form);
 
+  const { post, processing, transform } = useInertiaForm<TConfirmPasswordForm>({ password: "" });
+
+  const handleSubmit = (values: TConfirmPasswordForm) => {
+    transform(() => values);
     post(route(ROUTES.AUTH.PASSWORD.CONFIRM), {
-      onFinish: () => reset("password"),
+      onFinish: () => form.resetField("password"),
+      preserveScroll: true,
     });
   };
 
@@ -29,18 +35,16 @@ export default function ConfirmPassword() {
     >
       <Head title="Confirm password" />
 
-      <form className="flex flex-col gap-6" onSubmit={submit}>
-        <div className="space-y-6">
-          <FormInput
+      <Form {...form}>
+        <form className="flex flex-col gap-5" onSubmit={form.handleSubmit(handleSubmit)}>
+          <TextField
             autoComplete="current-password"
-            error={errors.password}
-            id="password"
+            control={form.control}
+            disabled={processing}
             label="Password"
-            onChange={(value) => setData("password", value)}
+            name="password"
             placeholder="Password"
-            required
             type="password"
-            value={data.password}
           />
 
           <div className="flex items-center">
@@ -49,8 +53,8 @@ export default function ConfirmPassword() {
               Confirm password
             </Button>
           </div>
-        </div>
-      </form>
+        </form>
+      </Form>
     </AuthLayout>
   );
 }

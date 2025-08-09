@@ -1,4 +1,6 @@
+import FlashMessage from "@/components/common/flash-message";
 import AuthLayoutTemplate from "@/layouts/auth/auth-simple-layout";
+import { Toaster } from "sonner";
 
 export default function AuthLayout({
   children,
@@ -12,7 +14,9 @@ export default function AuthLayout({
 }) {
   return (
     <AuthLayoutTemplate description={description} title={title} {...props}>
+      <Toaster closeButton position="top-center" richColors />
       {children}
+      <FlashMessage />
     </AuthLayoutTemplate>
   );
 }

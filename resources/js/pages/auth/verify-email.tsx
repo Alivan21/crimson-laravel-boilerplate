@@ -6,14 +6,14 @@ import { ROUTES } from "@/common/routes";
 import TextLink from "@/components/common/text-link";
 import { Button } from "@/components/ui/button";
 import AuthLayout from "@/layouts/auth-layout";
-interface VerifyEmailProps {
+type VerifyEmailProps = {
   status?: string;
-}
+};
 
 export default function VerifyEmail({ status }: VerifyEmailProps) {
   const { post, processing } = useForm({});
 
-  const submit: FormEventHandler = (e) => {
+  const handleSubmit: FormEventHandler = (e) => {
     e.preventDefault();
 
     post(route(ROUTES.AUTH.VERIFICATION.SEND));
@@ -33,7 +33,7 @@ export default function VerifyEmail({ status }: VerifyEmailProps) {
         </div>
       )}
 
-      <form className="space-y-6 text-center" onSubmit={submit}>
+      <form className="space-y-6 text-center" onSubmit={handleSubmit}>
         <Button disabled={processing} variant="secondary">
           {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
           Resend verification email

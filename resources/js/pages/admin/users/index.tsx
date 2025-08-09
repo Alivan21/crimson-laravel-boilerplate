@@ -18,9 +18,9 @@ const breadcrumbs: IBreadcrumbItem[] = [
   },
 ];
 
-interface UsersProps {
+type UsersProps = {
   data: TPaginatedUserResponse;
-}
+};
 
 export default function Users({ data }: UsersProps) {
   const columns: TColumn<IUser>[] = [

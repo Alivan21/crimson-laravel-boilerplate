@@ -9,10 +9,10 @@ import {
 import { type INavItem } from "@/types/shared/navigation";
 import { type ComponentPropsWithoutRef } from "react";
 
-interface NavFooterProps {
+type NavFooterProps = {
   className?: string;
   items: INavItem[];
-}
+};
 
 export function NavFooter({
   items,

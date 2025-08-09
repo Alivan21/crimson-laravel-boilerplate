@@ -1,25 +1,32 @@
-import { Head, useForm } from "@inertiajs/react";
+import { Head, useForm as useInertiaForm } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
-import { FormEventHandler } from "react";
 
 import { ROUTES } from "@/common/routes";
 import TextLink from "@/components/common/text-link";
-import { FormInput } from "@/components/forms/input";
+import { TextField } from "@/components/forms/fields/text-field";
 import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
+import { useFormValidationErrors } from "@/hooks/forms/use-form-validation-error";
+import { useZodForm } from "@/hooks/forms/use-zod-form";
 import AuthLayout from "@/layouts/auth-layout";
+import { TForgotPasswordForm, forgotPasswordSchema } from "@/types/modules/auth";
 
-interface ForgotPasswordProps {
+type ForgotPasswordProps = {
   status?: string;
-}
+};
 
 export default function ForgotPassword({ status }: ForgotPasswordProps) {
-  const { data, setData, post, processing, errors } = useForm<Required<{ email: string }>>({
-    email: "",
+  const form = useZodForm<TForgotPasswordForm>({
+    defaultValues: { email: "" },
+    schema: forgotPasswordSchema,
   });
 
-  const submit: FormEventHandler = (e) => {
-    e.preventDefault();
+  useFormValidationErrors(form);
 
+  const { post, processing, transform } = useInertiaForm<TForgotPasswordForm>({ email: "" });
+
+  const handleSubmit = (values: TForgotPasswordForm) => {
+    transform(() => values);
     post(route(ROUTES.AUTH.PASSWORD.EMAIL));
   };
 
@@ -35,30 +42,30 @@ export default function ForgotPassword({ status }: ForgotPasswordProps) {
       )}
 
       <div className="space-y-6">
-        <form className="flex flex-col gap-6" onSubmit={submit}>
-          <FormInput
-            autoComplete="off"
-            error={errors.email}
-            id="email"
-            label="Email address"
-            onChange={(value) => setData("email", value)}
-            placeholder="email@example.com"
-            required
-            type="email"
-            value={data.email}
-          />
+        <Form {...form}>
+          <form className="flex flex-col gap-5" onSubmit={form.handleSubmit(handleSubmit)}>
+            <TextField
+              autoComplete="off"
+              control={form.control}
+              disabled={processing}
+              label="Email address"
+              name="email"
+              placeholder="email@example.com"
+              type="email"
+            />
 
-          <div className="flex items-center">
-            <Button className="w-full" disabled={processing} type="submit">
-              {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
-              Email password reset link
-            </Button>
-          </div>
-        </form>
+            <div className="flex items-center">
+              <Button className="w-full" disabled={processing} type="submit">
+                {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
+                Email password reset link
+              </Button>
+            </div>
+          </form>
+        </Form>
 
         <div className="text-muted-foreground space-x-1 text-center text-sm">
           <span>Or, return to</span>
-          <TextLink href={route("login")}>log in</TextLink>
+          <TextLink href={route(ROUTES.AUTH.LOGIN)}>Login</TextLink>
         </div>
       </div>
     </AuthLayout>

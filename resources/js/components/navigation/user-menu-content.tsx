@@ -11,9 +11,9 @@ import { type IUser } from "@/types/shared";
 import { Link, router } from "@inertiajs/react";
 import { LogOut, Settings } from "lucide-react";
 
-interface UserMenuContentProps {
+type UserMenuContentProps = {
   user: IUser;
-}
+};
 
 export function UserMenuContent({ user }: UserMenuContentProps) {
   const cleanup = useMobileNavigation();

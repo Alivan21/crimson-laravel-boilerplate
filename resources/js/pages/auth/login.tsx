@@ -1,85 +1,96 @@
-import { Head, useForm } from "@inertiajs/react";
+import { Head, useForm as useInertiaForm } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
-import { FormEventHandler } from "react";
 
 import { ROUTES } from "@/common/routes";
 import TextLink from "@/components/common/text-link";
-import { FormCheckbox } from "@/components/forms/checkbox";
-import { FormInput } from "@/components/forms/input";
+import { CheckboxField } from "@/components/forms/fields/checkbox-field";
+import { TextField } from "@/components/forms/fields/text-field";
 import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
+import { useFormValidationErrors } from "@/hooks/forms/use-form-validation-error";
+import { useZodForm } from "@/hooks/forms/use-zod-form";
 import AuthLayout from "@/layouts/auth-layout";
-import { TLoginForm } from "@/types/modules/auth";
+import { TLoginForm, loginSchema } from "@/types/modules/auth";
 
-interface LoginProps {
+type LoginProps = {
   status?: string;
   can_reset_password: boolean;
-}
+};
 
 export default function Login({ status, can_reset_password }: LoginProps) {
-  const { data, setData, post, processing, errors, reset } = useForm<Required<TLoginForm>>({
+  const form = useZodForm<TLoginForm>({
+    defaultValues: { email: "", password: "", remember: false },
+    schema: loginSchema,
+  });
+
+  useFormValidationErrors(form);
+
+  const { post, processing, transform } = useInertiaForm<TLoginForm>({
     email: "",
     password: "",
     remember: false,
   });
 
-  const submit: FormEventHandler = (e) => {
-    e.preventDefault();
+  const handleSubmit = (values: TLoginForm) => {
+    transform(() => values);
     post(route(ROUTES.AUTH.LOGIN), {
-      onFinish: () => reset("password"),
+      onFinish: () => form.resetField("password"),
     });
   };
 
   return (
     <AuthLayout
-      description="Enter your email and password below to log in"
-      title="Log in to your account"
+      description="Enter your email and password below to login"
+      title="Login to your account"
     >
-      <Head title="Log in" />
+      <Head title="Login" />
 
-      <form className="flex flex-col gap-6" onSubmit={submit}>
-        <div className="grid gap-6">
-          <FormInput
-            autoComplete="email"
-            error={errors.email}
-            id="email"
-            label="Email address"
-            onChange={(value) => setData("email", value as string)}
-            placeholder="email@example.com"
-            required
-            type="email"
-            value={data.email}
-          />
+      <Form {...form}>
+        <form className="flex flex-col gap-4" onSubmit={form.handleSubmit(handleSubmit)}>
+          <div className="grid gap-5">
+            <TextField
+              autoComplete="email"
+              control={form.control}
+              disabled={processing}
+              label="Email address"
+              name="email"
+              placeholder="email@example.com"
+              type="email"
+            />
 
-          <FormInput
-            autoComplete="current-password"
-            error={errors.password}
-            id="password"
-            label="Password"
-            onChange={(value) => setData("password", value as string)}
-            placeholder="Password"
-            required
-            type="password"
-            value={data.password}
-            withForgotPassword={can_reset_password}
-          />
+            <TextField
+              autoComplete="current-password"
+              control={form.control}
+              disabled={processing}
+              label="Password"
+              name="password"
+              placeholder="Password"
+              type="password"
+            />
+            {can_reset_password && (
+              <div className="-mt-3 text-right">
+                <TextLink href={route(ROUTES.AUTH.PASSWORD.REQUEST)}>Forgot password?</TextLink>
+              </div>
+            )}
 
-          <FormCheckbox
-            checked={data.remember}
-            id="remember"
-            label="Remember me"
-            onChange={(value) => setData("remember", value)}
-          />
+            <CheckboxField
+              control={form.control}
+              disabled={processing}
+              label="Remember me"
+              name="remember"
+            />
 
-          <Button className="mt-4 w-full" disabled={processing} type="submit">
-            {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-            Log in
-          </Button>
-        </div>
+            <Button className="w-full" disabled={processing} type="submit">
+              {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
+              Login
+            </Button>
+          </div>
 
-        <div className="text-muted-foreground text-center text-sm">
-          Don't have an account? <TextLink href={route("register")}>Sign up</TextLink>
-        </div>
-      </form>
+          <div className="text-muted-foreground text-center text-sm">
+            Don't have an account? <TextLink href={route(ROUTES.AUTH.REGISTER)}>Sign up</TextLink>
+          </div>
+        </form>
+      </Form>
 
       {status && (
         <div className="mb-4 text-center text-sm font-medium text-green-600">{status}</div>

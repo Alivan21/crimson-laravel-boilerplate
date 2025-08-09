@@ -1,9 +1,9 @@
 import { useCallback } from "react";
 
-interface SortParams {
+type SortParams = {
   order?: "asc" | "desc";
   col?: string;
-}
+};
 
 const useSorting = (setParams: (params: (prevParams: SortParams) => SortParams) => void) => {
   const sort = useCallback(

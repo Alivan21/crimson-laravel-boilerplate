@@ -166,51 +166,29 @@ class DataTableService
     }
 
     /**
-     * Apply case-insensitive LIKE query optimized for the database driver
+     * Apply case-insensitive LIKE query optimized for the database driver.
+     *
+     * Uses the provided boolean connector to support both OR (for search)
+     * and AND (for filter) compositions.
      */
-    protected function applyCaseInsensitiveLike(Builder $query, string $column, string $search): void
+    protected function applyCaseInsensitiveLike(Builder $query, string $column, string $search, string $boolean = 'or'): void
     {
         $driver = $query->getConnection()->getDriverName();
 
         switch ($driver) {
             case 'pgsql':
                 // PostgreSQL: Use native ILIKE for optimal performance
-                $query->orWhere($column, 'ILIKE', "%{$search}%");
+                $query->where($column, 'ILIKE', "%{$search}%", $boolean);
                 break;
 
             case 'sqlite':
                 // SQLite: LIKE is case-insensitive by default
-                $query->orWhere($column, 'LIKE', "%{$search}%");
+                $query->where($column, 'LIKE', "%{$search}%", $boolean);
                 break;
 
             default:
                 // MySQL/MariaDB: Use LOWER() function
-                $query->orWhereRaw('LOWER(' . $column . ') LIKE ?', ['%' . strtolower($search) . '%']);
-                break;
-        }
-    }
-
-    /**
-     * Apply case-insensitive LIKE query optimized for the database driver
-     */
-    protected function applyCaseInsensitiveLikeFilter(string $column, string $search): void
-    {
-        $driver = $this->query->getConnection()->getDriverName();
-
-        switch ($driver) {
-            case 'pgsql':
-                // PostgreSQL: Use native ILIKE for optimal performance
-                $this->query->where($column, 'ILIKE', "%{$search}%");
-                break;
-
-            case 'sqlite':
-                // SQLite: LIKE is case-insensitive by default
-                $this->query->where($column, 'LIKE', "%{$search}%");
-                break;
-
-            default:
-                // MySQL/MariaDB: Use LOWER() function
-                $this->query->whereRaw('LOWER(' . $column . ') LIKE ?', ['%' . strtolower($search) . '%']);
+                $query->whereRaw('LOWER(' . $column . ') LIKE ?', ['%' . strtolower($search) . '%'], $boolean);
                 break;
         }
     }
@@ -267,7 +245,7 @@ class DataTableService
                     break;
 
                 case 'like':
-                    $this->applyCaseInsensitiveLikeFilter($column, $value);
+                    $this->applyCaseInsensitiveLike($this->query, $column, $value, 'and');
                     break;
 
                 case 'date':

@@ -3,10 +3,10 @@ import { type ISharedData } from "@/types/shared";
 import { Link, usePage } from "@inertiajs/react";
 import { type PropsWithChildren } from "react";
 
-interface AuthLayoutProps {
+type AuthLayoutProps = {
   title?: string;
   description?: string;
-}
+};
 
 export default function AuthSplitLayout({
   children,
