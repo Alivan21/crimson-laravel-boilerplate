@@ -118,7 +118,7 @@ export default function AppHeaderLayout({
           </div>
         )}
 
-        <div className="flex-1 overflow-hidden">{children}</div>
+        <main className="flex-1 overflow-hidden p-5 sm:p-2.5">{children}</main>
       </AppContent>
     </AppShell>
   );

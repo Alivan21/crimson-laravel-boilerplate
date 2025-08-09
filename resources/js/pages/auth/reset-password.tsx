@@ -1,12 +1,21 @@
-import { Head, useForm } from "@inertiajs/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Head, useForm as useInertiaForm } from "@inertiajs/react";
 import { LoaderCircle } from "lucide-react";
-import { FormEventHandler } from "react";
+import { useForm } from "react-hook-form";
 
 import { ROUTES } from "@/common/routes";
-import { FormInput } from "@/components/forms/input";
+import Input from "@/components/forms/input";
 import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import AuthLayout from "@/layouts/auth-layout";
-import { TResetPasswordForm } from "@/types/modules/auth";
+import { TResetPasswordForm, resetPasswordSchema } from "@/types/modules/auth";
 
 interface ResetPasswordProps {
   token: string;
@@ -14,67 +23,103 @@ interface ResetPasswordProps {
 }
 
 export default function ResetPassword({ token, email }: ResetPasswordProps) {
-  const { data, setData, post, processing, errors, reset } = useForm<Required<TResetPasswordForm>>({
+  const form = useForm<TResetPasswordForm>({
+    defaultValues: {
+      token,
+      email,
+      password: "",
+      password_confirmation: "",
+    },
+    resolver: zodResolver(resetPasswordSchema),
+  });
+
+  const { post, processing, transform } = useInertiaForm<TResetPasswordForm>({
     token,
     email,
     password: "",
     password_confirmation: "",
   });
 
-  const submit: FormEventHandler = (e) => {
-    e.preventDefault();
+  const handleSubmit = (values: TResetPasswordForm) => {
+    transform(() => values);
     post(route(ROUTES.AUTH.PASSWORD.STORE), {
-      onFinish: () => reset("password", "password_confirmation"),
+      onFinish: () => form.resetField("password"),
     });
   };
 
   return (
     <AuthLayout description="Enter your new password below" title="Reset password">
       <Head title="Reset Password" />
-      <form className="flex flex-col gap-6" onSubmit={submit}>
-        <div className="grid gap-6">
-          <FormInput
-            autoComplete="username"
-            error={errors.email}
-            id="email"
-            label="Email address"
-            onChange={(value) => setData("email", value)}
-            placeholder="Email address"
-            required
-            type="email"
-            value={data.email}
-          />
+      <Form {...form}>
+        <form className="flex flex-col gap-6" onSubmit={form.handleSubmit(handleSubmit)}>
+          <div className="grid gap-6">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Email address</FormLabel>
+                  <FormControl>
+                    <Input
+                      autoComplete="username"
+                      disabled={processing}
+                      placeholder="Email address"
+                      type="email"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormInput
-            autoComplete="new-password"
-            error={errors.password}
-            id="password"
-            label="Password"
-            onChange={(value) => setData("password", value)}
-            placeholder="New password"
-            required
-            type="password"
-            value={data.password}
-          />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      autoComplete="new-password"
+                      disabled={processing}
+                      placeholder="New password"
+                      type="password"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormInput
-            autoComplete="new-password"
-            error={errors.password_confirmation}
-            id="password_confirmation"
-            label="Confirm Password"
-            onChange={(value) => setData("password_confirmation", value)}
-            placeholder="Confirm password"
-            required
-            type="password"
-            value={data.password_confirmation}
-          />
-        </div>
+            <FormField
+              control={form.control}
+              name="password_confirmation"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Confirm Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      autoComplete="new-password"
+                      disabled={processing}
+                      placeholder="Confirm password"
+                      type="password"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
-        <Button disabled={processing} type="submit">
-          {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
-          Reset Password
-        </Button>
-      </form>
+          <Button disabled={processing} type="submit">
+            {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
+            Reset Password
+          </Button>
+        </form>
+      </Form>
     </AuthLayout>
   );
 }

@@ -1,0 +1,158 @@
+---
+description: Project-wide engineering rules for the Laravel + React boilerplate
+globs:
+  - "**/*"
+alwaysApply: true
+---
+
+# Cursor Rules for Laravel React Boilerplate
+
+## PHP/Laravel
+
+- Use PHP 8.2+ features when appropriate. Do not use outdated or deprecated PHP features.
+- Utilize Laravel 12.x built-in features and helpers when possible.
+- File structure: Follow Laravel's 12.x directory structure and naming conventions.
+- Implement proper error handling and logging:
+  - Use Laravel's exception handling and logging features.
+  - Create custom exceptions when necessary.
+  - Use try-catch blocks for expected exceptions.
+- Use Laravel's validation features for form and request validation.
+- Implement middleware for request filtering and modification.
+- Utilize Laravel's Eloquent ORM for database interactions.
+- Use Laravel's query builder for complex database queries.
+- Implement proper database migrations and seeders.
+- Use Eloquent ORM instead of raw SQL queries when possible.
+- Follow Laravel's MVC architecture.
+- Implement proper CSRF protection and security measures.
+- Use Laravel's built-in authentication features and guards.
+- Use `context7` for search the documentation of the technologies used in the project.
+
+## React/TypeScript/Frontend
+
+- Use React 19+ features and hooks when appropriate.
+- Write TypeScript code with proper type definitions and interfaces.
+- Always use type instead of interface for type definitions.
+- Use functional components with hooks instead of class components.
+- Avoid using `forwardRef` unless absolutely necessary.
+- Implement proper error boundaries and error handling.
+- Use React's built-in state management (useState, useReducer) or context when needed.
+- Follow React best practices for component composition and prop drilling.
+- Use proper TypeScript types and avoid `any` type unless absolutely necessary.
+- Use `React-Hook-Form` for form handling and `Zod` for form validation.
+- Implement proper form handling with validation.
+- Use Inertia.js for seamless client-server communication.
+- Never use localStorage or sessionStorage in artifacts - use React state instead.
+- Use `context7` for search the documentation of the technologies used in the project.
+
+## Styling and UI
+
+- Use Tailwind CSS for styling with utility classes.
+- Follow the existing Tailwind configuration and color scheme.
+- Use Shadcn/ui components when available before creating custom components.
+- Implement responsive design using Tailwind's responsive utilities.
+- Implement mobile-first design.
+- Use Lucide React icons for consistent iconography.
+- Follow the existing design system and component patterns.
+- Implement proper dark mode support using the existing theme system.
+
+## Database and Data Management
+
+- Use PostgreSQL for local development (default configuration).
+- Implement proper Eloquent models with relationships.
+- Use Laravel's migration system for database schema changes.
+- Use proper factory patterns for testing data.
+- Implement the DataTable service for complex data operations.
+- Use proper pagination and filtering for large datasets.
+
+## Authentication and Authorization
+
+- Use Laravel's built-in authentication system.
+- Implement role-based access control with the existing `CheckRole` middleware.
+- Use the `CheckActive` middleware for user status verification.
+- Implement proper password hashing and validation.
+- Use Laravel's email verification features when needed.
+
+## Testing
+
+- Use PEST testing framework for all tests.
+- Write feature tests for controllers and API endpoints.
+- Write unit tests for services and complex business logic.
+- Use Laravel's testing helpers and assertions.
+- Mock external dependencies and services in tests.
+
+## File Structure and Organization
+
+**Key Directories:**
+
+- Controllers: `/app/Http/Controllers/*`
+- Models: `/app/Models/*`
+- Middleware: `/app/Http/Middleware/*`
+- Services: `/app/Services/*`
+- Facades: `/app/Facades/*`
+- Requests: `/app/Http/Requests/*`
+- Database Migrations: `/database/migrations/*`
+- Database Seeders: `/database/seeders/*`
+- React Components: `/resources/js/components/*`
+- React Pages: `/resources/js/pages/*`
+- React Layouts: `/resources/js/layouts/*`
+- React Hooks: `/resources/js/hooks/*`
+- React Routes: `/resources/js/common/routes.ts`
+- TypeScript Types: `/resources/js/types/*`
+- Routes: `/routes/*`
+- Configuration: `/config/*`
+- Tests: `/tests/*`
+
+**Important Notes:**
+
+- Always check existing directories before creating new files to avoid duplication.
+- Routing lives in `/routes/*` (Laravel), NOT in `/resources/js/`.
+- Add the routes to the `routes.ts` file.
+- Follow the existing folder structure for React components and pages.
+
+## Specific Project Features
+
+- Use the DataTableService facade for complex data table operations.
+- Implement proper breadcrumb navigation using the existing system.
+- Use the existing sidebar navigation structure.
+- Follow the established pattern for settings pages and layouts.
+- Use the existing appearance/theme system for dark mode.
+- Implement flash messages using the existing toast system.
+- Use Inertia.js for all client-server communication.
+
+## Code Quality and Standards
+
+- Follow PSR-12 coding standards for PHP.
+- Use Laravel Pint for code formatting.
+- Use ESLint and Prettier for TypeScript/React code formatting.
+- Write descriptive commit messages and comments.
+- Use proper naming conventions for files, classes, and methods.
+- Implement proper type hints and return types in PHP.
+- Use proper TypeScript interfaces and types.
+
+## Security Best Practices
+
+- Always validate and sanitize user inputs.
+- Use Laravel's built-in CSRF protection.
+- Implement proper rate limiting where appropriate.
+- Use proper authorization checks before data access.
+- Never expose sensitive data in API responses.
+- Use proper password hashing and validation.
+
+## Project Context
+
+- PHP ^8.2
+- Laravel 12.x
+- React 19.x
+- TypeScript
+- Inertia.js for React
+- PostgreSQL Database (default)
+- Tailwind CSS 4.x
+- Shadcn/ui Components
+- Lucide React Icons
+- PEST Testing Framework
+- Vite Build Tool
+- Prettier for react code formatting
+- ESLint for code linting
+- editorconfig for php code formatting
+- React-Hook-Form for form handling
+- Zod for form validation
