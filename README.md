@@ -31,7 +31,7 @@ Modern Laravel + React starter with Inertia.js, TypeScript, Tailwind CSS 4, and 
 ### Install
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/Alivan21/crimson-laravel-boilerplate.git
 cd crimson-laravel-boilerplate
 
 # PHP deps
