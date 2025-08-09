@@ -29,10 +29,10 @@ const breadcrumbs: IBreadcrumbItem[] = [
   },
 ];
 
-interface ProfileProps {
+type ProfileProps = {
   must_verify_email: boolean;
   status?: string;
-}
+};
 
 export default function Profile({ must_verify_email, status }: ProfileProps) {
   const { auth } = usePage<ISharedData>().props;

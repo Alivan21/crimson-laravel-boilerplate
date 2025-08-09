@@ -1,15 +1,15 @@
 import type { Config } from "ziggy-js";
 
-export interface ISharedData {
+export type ISharedData = {
   name: string;
   quote: { message: string; author: string };
   auth: IAuthUser;
   ziggy: Config & { location: string };
   sidebarOpen: boolean;
   [key: string]: unknown;
-}
+};
 
-export interface IUser {
+export type IUser = {
   id: number;
   name: string;
   email: string;
@@ -19,8 +19,8 @@ export interface IUser {
   updated_at: string;
   is_active: boolean;
   [key: string]: unknown;
-}
+};
 
-export interface IAuthUser {
+export type IAuthUser = {
   user: IUser;
-}
+};

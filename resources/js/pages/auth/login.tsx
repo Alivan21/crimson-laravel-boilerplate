@@ -20,10 +20,10 @@ import { useFormValidationErrors } from "@/hooks/forms/use-form-validation-error
 import AuthLayout from "@/layouts/auth-layout";
 import { TLoginForm, loginSchema } from "@/types/modules/auth";
 
-interface LoginProps {
+type LoginProps = {
   status?: string;
   can_reset_password: boolean;
-}
+};
 
 export default function Login({ status, can_reset_password }: LoginProps) {
   const form = useForm<TLoginForm>({

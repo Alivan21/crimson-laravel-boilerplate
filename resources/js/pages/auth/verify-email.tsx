@@ -6,9 +6,9 @@ import { ROUTES } from "@/common/routes";
 import TextLink from "@/components/common/text-link";
 import { Button } from "@/components/ui/button";
 import AuthLayout from "@/layouts/auth-layout";
-interface VerifyEmailProps {
+type VerifyEmailProps = {
   status?: string;
-}
+};
 
 export default function VerifyEmail({ status }: VerifyEmailProps) {
   const { post, processing } = useForm({});

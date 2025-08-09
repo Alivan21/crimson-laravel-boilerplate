@@ -1,9 +1,11 @@
-import { useForm } from "@inertiajs/react";
-import { FormEventHandler, useRef } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm as useInertiaForm } from "@inertiajs/react";
+import { useRef } from "react";
+import { useForm } from "react-hook-form";
 
 import { ROUTES } from "@/common/routes";
 import HeadingSmall from "@/components/common/heading-small";
-import InputError from "@/components/forms/input-error";
+import Input from "@/components/forms/input";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,24 +16,42 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { useFormValidationErrors } from "@/hooks/forms/use-form-validation-error";
+import { z } from "zod";
+
+const deleteUserSchema = z.object({ password: z.string().min(1, "Password is required") });
+
+type DeleteUserForm = z.infer<typeof deleteUserSchema>;
 
 export default function DeleteUser() {
   const passwordInput = useRef<HTMLInputElement>(null);
+
+  const form = useForm<DeleteUserForm>({
+    defaultValues: { password: "" },
+    resolver: zodResolver(deleteUserSchema),
+  });
+  useFormValidationErrors(form);
+
   const {
-    data,
-    setData,
     delete: destroy,
     processing,
     reset,
-    errors,
     clearErrors,
-  } = useForm<Required<{ password: string }>>({ password: "" });
+    transform,
+  } = useInertiaForm<DeleteUserForm>({
+    password: "",
+  });
 
-  const deleteUser: FormEventHandler = (e) => {
-    e.preventDefault();
-
+  const deleteUser = (values: DeleteUserForm) => {
+    transform(() => values);
     destroy(route(ROUTES.ADMIN.SETTINGS.PROFILE.DESTROY), {
       preserveScroll: true,
       onSuccess: () => closeModal(),
@@ -68,38 +88,49 @@ export default function DeleteUser() {
               deleted. Please enter your password to confirm you would like to permanently delete
               your account.
             </DialogDescription>
-            <form className="space-y-6" onSubmit={deleteUser}>
-              <div className="grid gap-2">
-                <Label className="sr-only" htmlFor="password">
-                  Password
-                </Label>
+            <Form {...form}>
+              <form className="space-y-6" onSubmit={form.handleSubmit(deleteUser)}>
+                <div className="grid gap-2">
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => {
+                      const { ref, ...rest } = field;
+                      return (
+                        <FormItem>
+                          <FormLabel className="sr-only">Password</FormLabel>
+                          <FormControl>
+                            <Input
+                              autoComplete="current-password"
+                              placeholder="Password"
+                              ref={(el) => {
+                                ref(el);
+                                passwordInput.current = el as HTMLInputElement | null;
+                              }}
+                              type="password"
+                              {...rest}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      );
+                    }}
+                  />
+                </div>
 
-                <Input
-                  autoComplete="current-password"
-                  id="password"
-                  name="password"
-                  onChange={(e) => setData("password", e.target.value)}
-                  placeholder="Password"
-                  ref={passwordInput}
-                  type="password"
-                  value={data.password}
-                />
+                <DialogFooter className="gap-2">
+                  <DialogClose asChild>
+                    <Button onClick={closeModal} variant="secondary">
+                      Cancel
+                    </Button>
+                  </DialogClose>
 
-                <InputError message={errors.password} />
-              </div>
-
-              <DialogFooter className="gap-2">
-                <DialogClose asChild>
-                  <Button onClick={closeModal} variant="secondary">
-                    Cancel
+                  <Button asChild disabled={processing} variant="destructive">
+                    <button type="submit">Delete account</button>
                   </Button>
-                </DialogClose>
-
-                <Button asChild disabled={processing} variant="destructive">
-                  <button type="submit">Delete account</button>
-                </Button>
-              </DialogFooter>
-            </form>
+                </DialogFooter>
+              </form>
+            </Form>
           </DialogContent>
         </Dialog>
       </div>

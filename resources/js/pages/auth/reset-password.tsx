@@ -17,10 +17,10 @@ import {
 import AuthLayout from "@/layouts/auth-layout";
 import { TResetPasswordForm, resetPasswordSchema } from "@/types/modules/auth";
 
-interface ResetPasswordProps {
+type ResetPasswordProps = {
   token: string;
   email: string;
-}
+};
 
 export default function ResetPassword({ token, email }: ResetPasswordProps) {
   const form = useForm<TResetPasswordForm>({

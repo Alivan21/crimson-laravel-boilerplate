@@ -19,9 +19,9 @@ import { useFormValidationErrors } from "@/hooks/forms/use-form-validation-error
 import AuthLayout from "@/layouts/auth-layout";
 import { TForgotPasswordForm, forgotPasswordSchema } from "@/types/modules/auth";
 
-interface ForgotPasswordProps {
+type ForgotPasswordProps = {
   status?: string;
-}
+};
 
 export default function ForgotPassword({ status }: ForgotPasswordProps) {
   const form = useForm<TForgotPasswordForm>({

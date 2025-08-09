@@ -2,11 +2,11 @@ import AppLogoIcon from "@/components/icons/app-logo-icon";
 import { Link } from "@inertiajs/react";
 import { type PropsWithChildren } from "react";
 
-interface AuthLayoutProps {
+type AuthLayoutProps = {
   name?: string;
   title?: string;
   description?: string;
-}
+};
 
 export default function AuthSimpleLayout({
   children,

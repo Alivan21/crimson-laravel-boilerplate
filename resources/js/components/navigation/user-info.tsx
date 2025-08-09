@@ -2,10 +2,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useInitials } from "@/hooks/shared/use-initials";
 import { type IUser } from "@/types/shared";
 
-interface UserInfoProps {
+type UserInfoProps = {
   user: IUser;
   showEmail?: boolean;
-}
+};
 
 export function UserInfo({ user, showEmail = false }: UserInfoProps) {
   const getInitials = useInitials();
