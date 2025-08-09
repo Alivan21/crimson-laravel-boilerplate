@@ -1,122 +1,135 @@
 # Crimson Laravel Boilerplate
 
-This is a boilerplate project for a Laravel application with a React frontend, using Inertia.js to connect the two. It comes with a pre-configured set of tools and features to get you started quickly.
+Modern Laravel + React starter with Inertia.js, TypeScript, Tailwind CSS 4, and a prebuilt admin area. Includes auth, role-based access control, data tables, dark mode, and optional SSR.
 
 ## Features
 
-- **Laravel 12**: The latest version of the most popular PHP framework.
-- **React 19**: A modern JavaScript library for building user interfaces.
-- **Inertia.js**: Makes it easy to build single-page apps using classic server-side routing.
-- **TypeScript**: Adds static typing to JavaScript for more robust code.
-- **Tailwind CSS**: A utility-first CSS framework for rapid UI development.
-- **Vite**: A blazing fast frontend build tool.
-- **Authentication**: Pre-built authentication flows for login, registration, and password reset.
-- **User Roles**: A simple role-based access control system with `admin` and `user` roles.
-- **Data Tables**: A ready-to-use data table component with sorting, filtering, and pagination.
-- **Dark Mode**: A toggleable dark mode theme for the application.
-- **SSR (Server-Side Rendering)**: Support for server-side rendering for improved SEO and performance.
+- **Laravel 12** backend with **Inertia.js**
+- **React 19** + **TypeScript** powered frontend
+- **Tailwind CSS 4** + utility-first UI with Radix primitives and Headless UI
+- **Auth flows**: login, register, email verification, password reset/confirm
+- **Role-based access** via `role` middleware (e.g., `role:admin`)
+- **Admin area**: dashboard, users CRUD scaffold, settings (profile, password, appearance)
+- **Data tables** with sorting, filtering, pagination via `DataTableService`
+- **Dark mode** with persisted appearance
+- **SSR support** (Inertia SSR server + Vite SSR build)
 
-## Technologies Used
+## Tech Stack
 
-### Backend
+- Backend: PHP ^8.2, Laravel ^12, Inertia, Ziggy, Pest
+- Frontend: React 19, TypeScript, Vite 7, Tailwind 4, Radix UI, Headless UI, Lucide React
+- Tooling: pnpm, ESLint, Prettier, Laravel Pint, GitHub Actions
 
-- PHP 8.2
-- Laravel 12
-- Inertia.js
-- Pest (for testing)
-
-### Frontend
-
-- React 19
-- TypeScript
-- Tailwind CSS
-- Vite
-- Radix UI (for accessible UI components)
-- Headless UI (for unstyled, accessible UI components)
-- Lucide Icons (for a beautiful icon set)
-
-## Getting Started
+## Quick Start
 
 ### Prerequisites
 
-- PHP >= 8.2
-- Composer
-- Node.js
-- pnpm (or your preferred package manager)
+- PHP >= 8.2 and Composer
+- Node.js 22
+- pnpm 10.9+
 
-### Installation
+### Install
 
-1. **Clone the repository:**
+```bash
+git clone <your-repo-url>
+cd crimson-laravel-boilerplate
 
-   ```bash
-   git clone https://github.com/your-username/crimson-laravel-boilerplate.git
-   cd crimson-laravel-boilerplate
-   ```
+# PHP deps
+composer install
 
-2. **Install PHP dependencies:**
+# Frontend deps
+pnpm install
 
-   ```bash
-   composer install
-   ```
+# Environment
+cp .env.example .env
+php artisan key:generate
 
-3. **Install frontend dependencies:**
+# Migrate & seed
+php artisan migrate --seed
+```
 
-   ```bash
-   pnpm install
-   ```
-
-4. **Set up your environment file:**
-
-   ```bash
-   cp .env.example .env
-   ```
-
-5. **Generate an application key:**
-
-   ```bash
-   php artisan key:generate
-   ```
-
-6. **Create a database file:**
-
-   ```bash
-   touch database/database.sqlite
-   ```
-
-7. **Run database migrations and seed the database:**
-
-   ```bash
-   php artisan migrate --seed
-   ```
-
-### Running the Application
-
-To run the application in development mode, you can use the following command:
+### Run (SPA)
 
 ```bash
 composer run dev
 ```
 
-This will start the following processes concurrently:
+Starts: Laravel server, queue worker, and Vite dev server. App: `http://localhost:8000`.
 
-- The Laravel development server (`php artisan serve`)
-- The Vite development server (`npm run dev`)
-- The Laravel queue worker (`php artisan queue:listen`)
+### Run (SSR)
 
-You can then access the application at `http://localhost:8000`.
+```bash
+composer run dev:ssr
+```
 
-### Default User
+Builds SSR bundle and starts Laravel + queue + logs + Inertia SSR server.
 
-The database seeder creates a default user with the following credentials:
+## Scripts
 
-- **Email**: `test@example.com`
-- **Password**: `password`
-- **Role**: `admin`
+- Composer
+  - `composer run dev` — serve API + queue + Vite
+  - `composer run dev:ssr` — serve with Inertia SSR
+  - `composer run test` — clear config and run tests
+- pnpm
+  - `pnpm run dev` — Vite dev server
+  - `pnpm run build` — type-check + build client; SSR bundle via `pnpm run build:ssr`
+  - `pnpm run format` / `pnpm run format:check`
+  - `pnpm run lint`
+  - `pnpm run types`
+
+## Routes
+
+- Public
+  - `GET /` — Welcome
+- Auth (guest)
+  - `GET/POST /register`, `GET/POST /login`
+  - `GET/POST /forgot-password`, `GET /reset-password/{token}`, `POST /reset-password`
+- Authenticated
+  - Email verification notices + actions
+  - Confirm password, logout
+- Admin (requires `auth`, `verified`, `role:admin`, `active`)
+  - `GET /admin/dashboard`
+  - Users: index/create/store/show/edit/update/destroy
+  - Settings: profile (edit/update/delete), password (edit/update), appearance
+
+## Default Seeded User
+
+- Email: `test@example.com`
+- Password: `password`
+- Role: `admin`
+
+## Linting & Formatting
+
+- PHP: `vendor/bin/pint`
+- Frontend format: `pnpm run format`
+- Frontend lint: `pnpm run lint`
 
 ## Testing
-
-To run the test suite, you can use the following command:
 
 ```bash
 composer run test
 ```
+
+## Production Build
+
+```bash
+pnpm run build            # client build
+# optional: build SSR too
+pnpm run build:ssr        # client + SSR bundle
+```
+
+Then deploy as a standard Laravel app (configure `.env`, run `php artisan migrate --force`, serve via your PHP runtime). Start the Inertia SSR server if you need SSR.
+
+## Continuous Integration
+
+GitHub Actions run on pushes/PRs to `main`:
+
+- Install PHP 8.4, Node 22, pnpm 10.9
+- Install deps, generate Ziggy routes, build assets
+
+Separate linter workflow runs Pint, Prettier, and ESLint on `develop` and `main`.
+
+## Notes
+
+- Default DB is PostgreSQL (see `config/database.php`). Use MySQL by updating `.env` and running migrations.
+- Routes are available to TypeScript via Ziggy generation in CI.
