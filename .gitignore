@@ -21,6 +21,7 @@ yarn-error.log
 /.idea
 /.nova
 /.zed
+.DS_Store
 
 **/caddy
 frankenphp
