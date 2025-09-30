@@ -13,27 +13,58 @@ import {
 import { type INavGroup, type INavItem } from "@/types/shared/navigation";
 import { Link, usePage } from "@inertiajs/react";
 import { ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type NavMainProps = {
   items?: INavItem[];
   groups?: INavGroup[];
 };
 
+const STORAGE_KEY = "sidebar-collapsible-states";
+const getSavedStates = () => {
+  try {
+    const saved = sessionStorage.getItem(STORAGE_KEY);
+    return saved ? JSON.parse(saved) : {};
+  } catch {
+    return {};
+  }
+};
+
 function NavItem({ item }: { item: INavItem }) {
   const page = usePage();
-  const [isOpen, setIsOpen] = useState(false);
   const hasChildren = item.items && item.items.length > 0;
+  const hasActiveChild = item.items?.some((subItem) =>
+    subItem.href ? isPathActive(subItem.href, page.url) : false,
+  );
+  const isActive = (item.href ? isPathActive(item.href, page.url) : false) || hasActiveChild;
 
-  const isActive = item.href ? isPathActive(item.href, page.url) : false;
+  const [isOpen, setIsOpen] = useState(() => {
+    const savedStates = getSavedStates();
+    return savedStates[item.title] || false;
+  });
+
+  useEffect(() => {
+    const savedStates = getSavedStates();
+    const savedState = savedStates[item.title] || false;
+    if (savedState !== isOpen) {
+      setIsOpen(savedState);
+    }
+  }, [item.title, page.url]); // Re-sync when page URL changes
+
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+    const savedStates = getSavedStates();
+    const updatedStates = { ...savedStates, [item.title]: open };
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(updatedStates));
+  };
 
   if (hasChildren) {
     return (
-      <Collapsible onOpenChange={setIsOpen} open={isOpen}>
+      <Collapsible onOpenChange={handleOpenChange} open={isOpen}>
         <SidebarMenuItem>
           <CollapsibleTrigger asChild>
             <SidebarMenuButton
-              className="w-full"
+              className="w-full cursor-pointer"
               isActive={isActive}
               tooltip={{ children: item.title }}
             >
@@ -46,7 +77,10 @@ function NavItem({ item }: { item: INavItem }) {
               />
             </SidebarMenuButton>
           </CollapsibleTrigger>
-          <CollapsibleContent>
+          <CollapsibleContent
+            className="collapsible-content"
+            onClick={(e: React.MouseEvent) => e.stopPropagation()}
+          >
             <SidebarMenuSub>
               {item.items?.map((subItem) => (
                 <SidebarMenuSubItem key={subItem.title}>
@@ -54,13 +88,17 @@ function NavItem({ item }: { item: INavItem }) {
                     <NavItem item={subItem} />
                   ) : subItem.href ? (
                     <SidebarMenuSubButton asChild isActive={isPathActive(subItem.href, page.url)}>
-                      <Link href={subItem.href} prefetch>
+                      <Link
+                        href={subItem.href}
+                        onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                        prefetch
+                      >
                         {subItem.icon && <subItem.icon />}
                         <span>{subItem.title}</span>
                       </Link>
                     </SidebarMenuSubButton>
                   ) : (
-                    <SidebarMenuSubButton>
+                    <SidebarMenuSubButton onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                       {subItem.icon && <subItem.icon />}
                       <span>{subItem.title}</span>
                     </SidebarMenuSubButton>
@@ -101,7 +139,7 @@ export function NavMain({ items = [], groups = [] }: NavMainProps) {
     <>
       {navigationGroups.map((group) => (
         <SidebarGroup className="px-2 py-0" key={group.group}>
-          <SidebarGroupLabel>{group.group}</SidebarGroupLabel>
+          {(group.showLabel ?? true) ? <SidebarGroupLabel>{group.group}</SidebarGroupLabel> : null}
           <SidebarMenu>
             {group.items.map((item) => (
               <NavItem item={item} key={item.title} />

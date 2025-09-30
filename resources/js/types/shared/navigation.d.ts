@@ -7,6 +7,7 @@ export type IBreadcrumbItem = {
 
 export type INavGroup = {
   group: string;
+  showLabel?: boolean;
   items: INavItem[];
 };
 

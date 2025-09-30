@@ -36,6 +36,8 @@ type DataTableProps<TData> = {
   filterComponents?: TFilterableColumn[];
 };
 
+const DEFAULT_COLUMN_WIDTH = 200;
+
 export function DataTable<TData>({
   columns,
   data,
@@ -61,7 +63,7 @@ export function DataTable<TData>({
   );
 
   return (
-    <div className="space-y-4">
+    <div className="w-[calc(100%)] space-y-4">
       <DataTableToolbar
         filterComponents={filterComponents}
         params={params}
@@ -69,65 +71,67 @@ export function DataTable<TData>({
         searchPlaceholder={searchPlaceholder}
         setParams={setParams}
       />
-      <ScrollArea className="border-border w-full rounded-sm border whitespace-nowrap">
-        <div className="min-w-full">
-          <Table>
-            <TableHeader className="bg-card">
-              <TableRow className="divide-border divide-x">
-                {columns.map((column) => (
-                  <TableHead
-                    className="bg-muted text-card-foreground max-w-fit px-2.5 text-sm font-bold"
-                    key={column.id}
-                    style={
-                      column.width
-                        ? {
-                            width: column.width,
-                          }
-                        : undefined
-                    }
-                  >
-                    <DataTableSortHeader
-                      column={column}
-                      currentColumn={params.col as string}
-                      currentSort={params.order as "asc" | "desc"}
-                      sort={handleSort}
-                    />
-                  </TableHead>
-                ))}
+      <ScrollArea className="border-border rounded-sm border">
+        <Table>
+          <TableHeader className="bg-card">
+            <TableRow className="divide-border divide-x">
+              {columns.map((column) => (
+                <TableHead
+                  className="bg-muted text-card-foreground px-2.5 text-sm font-bold"
+                  key={column.id}
+                  style={{
+                    width: column.width || DEFAULT_COLUMN_WIDTH,
+                    minWidth: column.width || DEFAULT_COLUMN_WIDTH,
+                    maxWidth: column.width || DEFAULT_COLUMN_WIDTH,
+                  }}
+                >
+                  <DataTableSortHeader
+                    column={column}
+                    currentColumn={params.col as string}
+                    currentSort={params.order as "asc" | "desc"}
+                    sort={handleSort}
+                  />
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {data.length === 0 ? (
+              <TableRow>
+                <TableCell
+                  className="text-muted-foreground h-24 text-center"
+                  colSpan={columns.length}
+                >
+                  No results.
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data.length === 0 ? (
-                <TableRow>
-                  <TableCell
-                    className="text-muted-foreground h-24 text-center"
-                    colSpan={columns.length}
-                  >
-                    No results.
-                  </TableCell>
-                </TableRow>
-              ) : (
-                data.map((row, i) => (
-                  <TableRow className="hover:bg-muted/50" key={i}>
-                    {columns.map((column) => (
-                      <TableCell
-                        className="text-foreground px-4"
-                        key={column.id}
-                        style={column.width ? { width: column.width } : undefined}
-                      >
+            ) : (
+              data.map((row, i) => (
+                <TableRow className="hover:bg-muted/50" key={i}>
+                  {columns.map((column) => (
+                    <TableCell
+                      className="text-foreground px-4 break-words"
+                      key={column.id}
+                      style={{
+                        width: column.width || DEFAULT_COLUMN_WIDTH,
+                        minWidth: column.width || DEFAULT_COLUMN_WIDTH,
+                        maxWidth: column.width || DEFAULT_COLUMN_WIDTH,
+                      }}
+                    >
+                      <div className="break-words whitespace-normal">
                         {column.cell
                           ? column.cell(row, i)
                           : column.accessorKey
                             ? String(row[column.accessorKey])
                             : null}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </div>
+                      </div>
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
       <DataTablePagination meta={meta} setParams={setParams} />

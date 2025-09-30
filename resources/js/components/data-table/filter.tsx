@@ -1,4 +1,4 @@
-import Combobox, { type Option } from "@/components/ui/combobox";
+import Combobox, { type TOption } from "@/components/ui/combobox";
 import { cn } from "@/libs/clsx";
 import { TDataTableParams } from "@/types/shared/response";
 import { DateTimePicker } from "../ui/datetime-picker";
@@ -7,7 +7,7 @@ export type TFilterableColumn = {
   id: string;
   title: string;
   type: "select" | "datepicker";
-  options?: Option[];
+  options?: TOption[];
   placeholder?: string;
   datePickerProps?: {
     granularity?: "year" | "month" | "day" | "second";
@@ -31,7 +31,7 @@ export function DataTableFilter({ columns, params, setParams, className }: DataT
             <Combobox
               className="w-full min-w-0"
               key={column.id}
-              onChange={(option: Option | undefined) => {
+              onChange={(option: TOption | undefined) => {
                 setParams((prev) => ({
                   ...prev,
                   [column.id]: option?.value,

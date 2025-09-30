@@ -25,7 +25,7 @@ function Input({ className, ref, type = "text", ...props }: InputProps) {
         <button
           aria-label={isPasswordVisible ? "Hide password" : "Show password"}
           aria-pressed={isPasswordVisible}
-          className="text-muted-foreground hover:text-foreground absolute inset-y-0 right-0 mr-2 flex cursor-pointer items-center"
+          className="text-muted-foreground hover:text-foreground absolute inset-y-0 right-0 mr-2 flex cursor-pointer items-center !p-0"
           onClick={() => setIsPasswordVisible((v) => !v)}
           type="button"
         >

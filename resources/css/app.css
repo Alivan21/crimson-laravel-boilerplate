@@ -16,8 +16,10 @@
   --popover-foreground: oklch(0.145 0 0);
   --primary: oklch(0.5082 0.127 248.3291);
   --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.96 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.47 0 0);
+  --secondary-foreground: oklch(0.9851 0 0);
+  --success: oklch(0.65 0.15 142);
+  --success-foreground: oklch(0.98 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
   --accent: oklch(0.97 0 0);
@@ -67,8 +69,10 @@
   --popover-foreground: oklch(0.985 0 0);
   --primary: oklch(0.3275 0.1589 262.5939);
   --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.47 0 0);
+  --secondary-foreground: oklch(0.9851 0 0);
+  --success: oklch(0.65 0.15 142);
+  --success-foreground: oklch(0.98 0 0);
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
   --accent: oklch(0.371 0 0);
@@ -118,6 +122,8 @@
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
@@ -167,5 +173,43 @@
 
   body {
     @apply bg-background text-foreground scroll-smooth antialiased;
+  }
+}
+
+/* Collapsible sidebar animations */
+@layer components {
+  .collapsible-content {
+    overflow: hidden;
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .collapsible-content[data-state="open"] {
+    animation: slideDown 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .collapsible-content[data-state="closed"] {
+    animation: slideUp 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @keyframes slideDown {
+    from {
+      height: 0;
+      opacity: 0;
+    }
+    to {
+      height: var(--radix-collapsible-content-height);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      height: var(--radix-collapsible-content-height);
+      opacity: 1;
+    }
+    to {
+      height: 0;
+      opacity: 0;
+    }
   }
 }

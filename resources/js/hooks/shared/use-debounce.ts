@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * A hook that returns a debounced value after a specified delay.
@@ -10,8 +10,15 @@ import { useEffect, useState } from "react";
  */
 export function useDebounce<T>(value: T, delay = 500): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
+    // Skip debounce on first render for immediate initial value
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
     const timer = setTimeout(() => {
       setDebouncedValue(value);
     }, delay);

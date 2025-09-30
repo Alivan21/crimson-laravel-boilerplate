@@ -1,3 +1,6 @@
+import { Command, CommandGroup, CommandItem, CommandList } from "@/components/ui/command";
+import { useDebounce } from "@/hooks/shared/use-debounce";
+import { cn } from "@/libs/clsx";
 import { Command as CommandPrimitive, useCommandState } from "cmdk";
 import { Check, ChevronsUpDown, X } from "lucide-react";
 import {
@@ -9,12 +12,9 @@ import {
   useRef,
   useState,
 } from "react";
-import { Command, CommandGroup, CommandItem, CommandList } from "@/components/ui/command";
-import { useDebounce } from "@/hooks/shared/use-debounce";
-import { cn } from "@/libs/clsx";
 import { ScrollArea } from "./scroll-area";
 
-export type Option = {
+export type TOption = {
   value: string;
   label: string;
   disable?: boolean;
@@ -22,14 +22,14 @@ export type Option = {
   [key: string]: string | boolean | undefined;
 };
 type GroupOption = {
-  [key: string]: Option[];
+  [key: string]: TOption[];
 };
 
 type ComboboxProps = {
-  value?: Option;
-  defaultOptions?: Option[];
+  value?: TOption;
+  defaultOptions?: TOption[];
   /** manually controlled options */
-  options?: Option[];
+  options?: TOption[];
   placeholder?: string;
   /** Loading component. */
   loadingIndicator?: React.ReactNode;
@@ -43,14 +43,14 @@ type ComboboxProps = {
    **/
   triggerSearchOnFocus?: boolean;
   /** async search */
-  onSearch?: (value: string) => Promise<Option[]>;
+  onSearch?: (value: string) => Promise<TOption[]>;
   /**
    * sync search. This search will not showing loadingIndicator.
    * The rest props are the same as async search.
    * i.e.: creatable, groupBy, delay.
    **/
-  onSearchSync?: (value: string) => Option[];
-  onChange?: (option: Option | undefined) => void;
+  onSearchSync?: (value: string) => TOption[];
+  onChange?: (option: TOption | undefined) => void;
   disabled?: boolean;
   /** Group the options base on provided key. */
   groupBy?: string;
@@ -77,13 +77,13 @@ type ComboboxProps = {
 };
 
 export type ComboboxRef = {
-  selectedValue: Option | undefined;
+  selectedValue: TOption | undefined;
   input: HTMLInputElement;
   focus: () => void;
   reset: () => void;
 };
 
-const transToGroupOption = (options: Option[], groupBy?: string) => {
+const transToGroupOption = (options: TOption[], groupBy?: string) => {
   if (options.length === 0) {
     return {};
   }
@@ -128,7 +128,7 @@ const CommandEmpty = memo(
         {...props}
       />
     );
-  }
+  },
 );
 CommandEmpty.displayName = "CommandEmpty";
 
@@ -161,13 +161,13 @@ function Combobox({
   const [open, setOpen] = useState(false);
   const [onScrollbar, setOnScrollbar] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [selected, setSelected] = useState<Option | undefined>(value);
+  const [selected, setSelected] = useState<TOption | undefined>(value);
   const [inputValue, setInputValue] = useState("");
 
   // Initialize options with memoized default options
   const initialOptions = useMemo(
     () => transToGroupOption(arrayDefaultOptions, groupBy),
-    [arrayDefaultOptions, groupBy]
+    [arrayDefaultOptions, groupBy],
   );
 
   const [options, setOptions] = useState<GroupOption>(initialOptions);
@@ -201,7 +201,7 @@ function Combobox({
       focus: () => inputRef?.current?.focus(),
       reset: () => setSelected(undefined),
     }),
-    [selected]
+    [selected],
   );
 
   // Memoize click outside handler
@@ -365,7 +365,7 @@ function Combobox({
   // Memoize shouldFilter
   const shouldFilter = useMemo(
     () => (commandProps?.shouldFilter !== undefined ? commandProps.shouldFilter : !onSearch),
-    [commandProps?.shouldFilter, onSearch]
+    [commandProps?.shouldFilter, onSearch],
   );
 
   // Memoize button click handler
@@ -378,7 +378,7 @@ function Combobox({
         inputRef?.current?.focus();
       }, 0);
     },
-    [disabled]
+    [disabled],
   );
 
   return (
@@ -395,7 +395,7 @@ function Combobox({
           "focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-1",
           "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
           disabled && "cursor-not-allowed opacity-50",
-          className
+          className,
         )}
         id={id}
         onClick={handleButtonClick}
@@ -409,7 +409,7 @@ function Combobox({
               {...inputProps}
               className={cn(
                 "placeholder:text-muted-foreground flex-1 bg-transparent outline-none",
-                inputProps?.className
+                inputProps?.className,
               )}
               disabled={disabled}
               onBlur={(event) => {
@@ -437,16 +437,17 @@ function Combobox({
             />
           )}
         </div>
-        <div className="flex items-center gap-1 ms-2">
+        <div className="ms-2 flex items-center gap-1">
           {selected ? (
             <span
               aria-label="Clear selection"
               className={cn(
                 "inline-flex h-4 w-4 cursor-pointer items-center justify-center p-0",
-                disabled && "hidden"
+                disabled && "hidden",
               )}
               onClick={(e) => {
                 e.stopPropagation();
+                e.preventDefault();
                 handleClear();
               }}
               onKeyDown={(e) => {
@@ -490,7 +491,7 @@ function Combobox({
                             className={cn(
                               "my-0.5 flex cursor-pointer items-center justify-between",
                               option.disable && "text-muted-foreground cursor-default",
-                              isSelected && "bg-accent"
+                              isSelected && "bg-accent",
                             )}
                             disabled={option.disable}
                             key={option.value}

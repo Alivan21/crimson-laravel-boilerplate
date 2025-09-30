@@ -7,7 +7,7 @@ import { cn } from "@/libs/clsx";
 import { FileText, X } from "lucide-react";
 
 type FileUploadProps = {
-  file: File | null;
+  file: File | string | null;
   onFileChange: (file: File | null) => void;
   accept?: string;
   maxSize?: number;
@@ -64,6 +64,14 @@ export function FileUpload({
       setPreview(null);
       return;
     }
+
+    if (typeof file === "string") {
+      const previewUrl =
+        file.startsWith("http") || file.startsWith("/") ? file : `/storage/${file}`;
+      setPreview(previewUrl);
+      return;
+    }
+
     if (file.type?.startsWith("image/")) {
       const reader = new FileReader();
       reader.onload = () => setPreview(reader.result as string);
@@ -121,12 +129,22 @@ export function FileUpload({
             </Button>
           </div>
           <div className="text-sm">
-            <p className="max-w-[16rem] truncate font-medium text-gray-900" title={file.name}>
-              {file.name}
+            <p
+              className="max-w-[16rem] truncate font-medium text-gray-900"
+              title={
+                typeof file === "string"
+                  ? file.startsWith("http") || file.startsWith("/")
+                    ? file
+                    : `/storage/${file}`
+                  : file.name
+              }
+            >
+              {typeof file === "string" ? "Existing image" : file.name}
             </p>
             <p className="text-gray-600">
-              {formatFileSize(file.size)}
-              {file.type ? ` • ${file.type}` : ""}
+              {typeof file === "string"
+                ? "Existing file"
+                : `${formatFileSize(file.size)}${file.type ? ` • ${file.type}` : ""}`}
             </p>
             <p className="mt-1 text-xs text-gray-500">Click to replace</p>
           </div>
