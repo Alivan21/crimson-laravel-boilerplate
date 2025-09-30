@@ -1,35 +1,42 @@
+import { Search } from "lucide-react";
+import { useCallback } from "react";
+
 import { Input } from "@/components/ui/input";
 import { TDataTableParams } from "@/types/shared/response";
-import { Search } from "lucide-react";
 import { DataTableFilter, type TFilterableColumn } from "./filter";
 
 type DataTableToolbarProps = {
-  searchPlaceholder: string;
-  searchKey: string;
-  params: TDataTableParams;
-  setParams: (params: (prevParams: TDataTableParams) => TDataTableParams) => void;
   filterComponents?: TFilterableColumn[];
+  params: TDataTableParams;
+  searchKey: string;
+  searchPlaceholder: string;
+  setParams: (params: (prevParams: TDataTableParams) => TDataTableParams) => void;
 };
 
 export function DataTableToolbar({
-  searchPlaceholder,
-  searchKey,
-  params,
-  setParams,
   filterComponents,
+  params,
+  searchKey,
+  searchPlaceholder,
+  setParams,
 }: DataTableToolbarProps) {
+  const handleSearchChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setParams((prev) => ({
+        ...prev,
+        [searchKey]: e.target.value,
+      }));
+    },
+    [searchKey, setParams],
+  );
+
   return (
     <div className="space-y-3 md:space-y-4">
       <div className="relative w-full">
         <Search className="text-muted-foreground absolute top-2.5 left-2 h-4 w-4" />
         <Input
           className="h-9 w-full pl-8"
-          onChange={(e) =>
-            setParams((prev) => ({
-              ...prev,
-              [searchKey]: e.target.value,
-            }))
-          }
+          onChange={handleSearchChange}
           placeholder={searchPlaceholder}
           value={params[searchKey]?.toString() || ""}
         />

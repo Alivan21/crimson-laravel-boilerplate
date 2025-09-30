@@ -16,5 +16,5 @@ export type INavItem = {
   href: string;
   icon?: LucideIcon | null;
   isActive?: boolean;
-  items?: NavItem[];
+  items?: INavItem[];
 };

@@ -30,3 +30,5 @@ frankenphp-worker.php
 **/caddy
 frankenphp
 frankenphp-worker.php
+
+tsconfig.tsbuildinfo

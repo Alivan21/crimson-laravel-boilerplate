@@ -1,25 +1,23 @@
-import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronsUpDown, ChevronUp } from "lucide-react";
+import { memo, useCallback } from "react";
+
+import { Button } from "@/components/ui/button";
 import { TColumn } from "./index";
 
 type DataTableSortHeaderProps<TData> = {
   column: TColumn<TData>;
-  sort: (column: string, direction: "asc" | "desc" | undefined) => void;
-  currentSort?: "asc" | "desc";
   currentColumn?: string;
+  currentSort?: "asc" | "desc";
+  sort: (column: string, direction: "asc" | "desc" | undefined) => void;
 };
 
-export function DataTableSortHeader<TData>({
+function DataTableSortHeaderComponent<TData>({
   column,
-  sort,
-  currentSort,
   currentColumn,
+  currentSort,
+  sort,
 }: DataTableSortHeaderProps<TData>) {
-  if (!column.enableSorting) {
-    return <span>{column.header}</span>;
-  }
-
-  const handleSort = () => {
+  const handleSort = useCallback(() => {
     if (currentColumn !== column.id) {
       sort(column.id, "asc");
     } else if (currentSort === "asc") {
@@ -27,7 +25,19 @@ export function DataTableSortHeader<TData>({
     } else if (currentSort === "desc") {
       sort("", undefined);
     }
-  };
+  }, [column.id, currentColumn, currentSort, sort]);
+
+  if (!column.enableSorting) {
+    return <span>{column.header}</span>;
+  }
+
+  const isActive = currentColumn === column.id;
+  const SortIcon =
+    isActive && currentSort === "asc"
+      ? ChevronDown
+      : isActive && currentSort === "desc"
+        ? ChevronUp
+        : ChevronsUpDown;
 
   return (
     <Button
@@ -36,21 +46,14 @@ export function DataTableSortHeader<TData>({
       variant="ghost"
     >
       <span className="text-left text-wrap break-words">{column.header}</span>
-      {column.enableSorting && (
-        <span className="ml-auto transition-opacity">
-          {currentColumn === column.id ? (
-            currentSort === "asc" ? (
-              <ChevronDown className="text-muted-foreground size-4" />
-            ) : currentSort === "desc" ? (
-              <ChevronUp className="text-muted-foreground size-4" />
-            ) : (
-              <ChevronsUpDown className="text-muted-foreground size-4" />
-            )
-          ) : (
-            <ChevronsUpDown className="text-muted-foreground size-4" />
-          )}
-        </span>
-      )}
+      <span className="ml-auto transition-opacity">
+        <SortIcon className="text-muted-foreground size-4" />
+      </span>
     </Button>
   );
 }
+
+// Memoize the component to prevent unnecessary rerenders
+export const DataTableSortHeader = memo(
+  DataTableSortHeaderComponent,
+) as typeof DataTableSortHeaderComponent;

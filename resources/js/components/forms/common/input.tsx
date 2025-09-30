@@ -16,7 +16,7 @@ function Input({ className, ref, type = "text", ...props }: InputProps) {
   return (
     <div className="relative">
       <BaseInput
-        className={cn(isPassword && "pr-10", className)}
+        className={cn(isPassword && "pr-8", className)}
         ref={ref}
         type={effectiveType}
         {...props}
@@ -25,14 +25,14 @@ function Input({ className, ref, type = "text", ...props }: InputProps) {
         <button
           aria-label={isPasswordVisible ? "Hide password" : "Show password"}
           aria-pressed={isPasswordVisible}
-          className="text-muted-foreground hover:text-foreground absolute inset-y-0 right-0 mr-2 flex cursor-pointer items-center !p-0"
+          className="text-muted-foreground hover:text-foreground absolute inset-y-2.5 right-0 mr-3 flex size-4 cursor-pointer items-center !p-0"
           onClick={() => setIsPasswordVisible((v) => !v)}
           type="button"
         >
           {isPasswordVisible ? (
-            <EyeOff aria-hidden="true" className="h-4 w-4" />
+            <EyeOff aria-hidden="true" className="size-4" />
           ) : (
-            <Eye aria-hidden="true" className="h-4 w-4" />
+            <Eye aria-hidden="true" className="size-4" />
           )}
         </button>
       ) : null}

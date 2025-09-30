@@ -1,3 +1,6 @@
+import { usePage } from "@inertiajs/react";
+import { ReactNode, useCallback, useMemo } from "react";
+
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
   Table,
@@ -9,46 +12,46 @@ import {
 } from "@/components/ui/table";
 import useDebounceSearchParams from "@/hooks/data-table/use-debounce-search-params";
 import { TDataTableParams, TMeta } from "@/types/shared/response";
-import { usePage } from "@inertiajs/react";
-import * as React from "react";
-import { useCallback } from "react";
 import { type TFilterableColumn } from "./filter";
 import { DataTablePagination } from "./pagination";
 import { DataTableSortHeader } from "./sort-header";
 import { DataTableToolbar } from "./toolbar";
 
 export type TColumn<TData> = {
-  id: string;
-  header: string;
   accessorKey?: keyof TData;
-  cell?: (row: TData, index: number) => React.ReactNode;
+  cell?: (row: TData, index: number) => ReactNode;
   enableSorting?: boolean;
+  header: string;
+  id: string;
   width?: string | number;
 };
 
 type DataTableProps<TData> = {
   columns: TColumn<TData>[];
   data: TData[];
-  initialParams?: Partial<TDataTableParams>;
-  searchPlaceholder?: string;
-  searchKey?: string;
-  meta: TMeta;
   filterComponents?: TFilterableColumn[];
+  initialParams?: Partial<TDataTableParams>;
+  meta: TMeta;
+  searchKey?: string;
+  searchPlaceholder?: string;
 };
 
 const DEFAULT_COLUMN_WIDTH = 200;
 
-export function DataTable<TData>({
+export function DataTable<TData extends { id?: string | number }>({
   columns,
   data,
-  initialParams = {},
-  searchPlaceholder = "Search...",
-  searchKey = "search",
-  meta,
   filterComponents,
+  initialParams = {},
+  meta,
+  searchKey = "search",
+  searchPlaceholder = "Search...",
 }: DataTableProps<TData>) {
   const { url } = usePage();
-  const currentUrl = url.split("?")[0];
+
+  // Memoize the base URL to prevent unnecessary recalculations
+  const currentUrl = useMemo(() => url.split("?")[0], [url]);
+
   const { params, setParams } = useDebounceSearchParams(currentUrl, initialParams);
 
   const handleSort = useCallback(
@@ -80,9 +83,9 @@ export function DataTable<TData>({
                   className="bg-muted text-card-foreground px-2.5 text-sm font-bold"
                   key={column.id}
                   style={{
-                    width: column.width || DEFAULT_COLUMN_WIDTH,
-                    minWidth: column.width || DEFAULT_COLUMN_WIDTH,
                     maxWidth: column.width || DEFAULT_COLUMN_WIDTH,
+                    minWidth: column.width || DEFAULT_COLUMN_WIDTH,
+                    width: column.width || DEFAULT_COLUMN_WIDTH,
                   }}
                 >
                   <DataTableSortHeader
@@ -107,15 +110,18 @@ export function DataTable<TData>({
               </TableRow>
             ) : (
               data.map((row, i) => (
-                <TableRow className="hover:bg-muted/50" key={i}>
+                <TableRow
+                  className="hover:bg-muted/50"
+                  key={row.id !== undefined ? String(row.id) : `row-${i}`}
+                >
                   {columns.map((column) => (
                     <TableCell
                       className="text-foreground px-4 break-words"
                       key={column.id}
                       style={{
-                        width: column.width || DEFAULT_COLUMN_WIDTH,
-                        minWidth: column.width || DEFAULT_COLUMN_WIDTH,
                         maxWidth: column.width || DEFAULT_COLUMN_WIDTH,
+                        minWidth: column.width || DEFAULT_COLUMN_WIDTH,
+                        width: column.width || DEFAULT_COLUMN_WIDTH,
                       }}
                     >
                       <div className="break-words whitespace-normal">

@@ -13,7 +13,7 @@ import {
 import { type INavGroup, type INavItem } from "@/types/shared/navigation";
 import { Link, usePage } from "@inertiajs/react";
 import { ChevronRight } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type NavMainProps = {
   items?: INavItem[];
@@ -21,41 +21,65 @@ type NavMainProps = {
 };
 
 const STORAGE_KEY = "sidebar-collapsible-states";
-const getSavedStates = () => {
+
+const getSavedStates = (): Record<string, boolean> => {
   try {
     const saved = sessionStorage.getItem(STORAGE_KEY);
-    return saved ? JSON.parse(saved) : {};
+    return saved ? (JSON.parse(saved) as Record<string, boolean>) : {};
   } catch {
     return {};
   }
 };
 
+const saveCollapsibleState = (itemTitle: string, isOpen: boolean): void => {
+  try {
+    const savedStates = getSavedStates();
+    const updatedStates = { ...savedStates, [itemTitle]: isOpen };
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(updatedStates));
+  } catch {
+    // Silently fail if sessionStorage is not available
+  }
+};
+
 function NavItem({ item }: { item: INavItem }) {
   const page = usePage();
-  const hasChildren = item.items && item.items.length > 0;
-  const hasActiveChild = item.items?.some((subItem) =>
-    subItem.href ? isPathActive(subItem.href, page.url) : false,
-  );
-  const isActive = (item.href ? isPathActive(item.href, page.url) : false) || hasActiveChild;
 
+  const hasChildren = useMemo(() => item.items && item.items.length > 0, [item.items]);
+  const hasActiveChild = useMemo(
+    () =>
+      item.items?.some((subItem) => (subItem.href ? isPathActive(subItem.href, page.url) : false)),
+    [item.items, page.url],
+  );
+  const isActive = useMemo(
+    () => (item.href ? isPathActive(item.href, page.url) : false) || hasActiveChild,
+    [item.href, page.url, hasActiveChild],
+  );
+
+  // Initialize state: check saved state OR auto-open if has active child
   const [isOpen, setIsOpen] = useState(() => {
     const savedStates = getSavedStates();
-    return savedStates[item.title] || false;
+    if (savedStates[item.title] !== undefined) {
+      return savedStates[item.title];
+    }
+    // Compute hasActiveChild inline for initial state
+    return (
+      item.items?.some((subItem) =>
+        subItem.href ? isPathActive(subItem.href, page.url) : false,
+      ) ?? false
+    );
   });
 
+  // Auto-expand when navigating to a page with active child
   useEffect(() => {
-    const savedStates = getSavedStates();
-    const savedState = savedStates[item.title] || false;
-    if (savedState !== isOpen) {
-      setIsOpen(savedState);
+    if (hasActiveChild && !isOpen) {
+      setIsOpen(true);
+      saveCollapsibleState(item.title, true);
     }
-  }, [item.title, page.url]); // Re-sync when page URL changes
+  }, [hasActiveChild, isOpen, item.title]);
 
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open);
-    const savedStates = getSavedStates();
-    const updatedStates = { ...savedStates, [item.title]: open };
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(updatedStates));
+    saveCollapsibleState(item.title, open);
   };
 
   if (hasChildren) {
@@ -132,14 +156,19 @@ function NavItem({ item }: { item: INavItem }) {
 }
 
 export function NavMain({ items = [], groups = [] }: NavMainProps) {
-  const navigationGroups =
-    groups.length > 0 ? groups : items.length > 0 ? [{ group: "Platform", items }] : [];
+  const navigationGroups = useMemo(() => {
+    if (groups.length > 0) return groups;
+    if (items.length > 0) return [{ group: "Platform", items }];
+    return [];
+  }, [groups, items]);
+
+  if (navigationGroups.length === 0) return null;
 
   return (
     <>
       {navigationGroups.map((group) => (
         <SidebarGroup className="px-2 py-0" key={group.group}>
-          {(group.showLabel ?? true) ? <SidebarGroupLabel>{group.group}</SidebarGroupLabel> : null}
+          {(group.showLabel ?? true) && <SidebarGroupLabel>{group.group}</SidebarGroupLabel>}
           <SidebarMenu>
             {group.items.map((item) => (
               <NavItem item={item} key={item.title} />
