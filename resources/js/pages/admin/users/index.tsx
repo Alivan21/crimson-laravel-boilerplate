@@ -1,11 +1,12 @@
 import { ROUTES } from "@/common/routes";
-import { DataTable, TColumn } from "@/components/data-table";
-import { TFilterableColumn } from "@/components/data-table/filter";
+import { DataTable, TColumn } from "@/components/datatable";
+import { TFilterableColumn } from "@/components/datatable/filter";
 import { Badge } from "@/components/ui/badge";
 import AppLayout from "@/layouts/app-layout";
 import { TPaginatedUserResponse } from "@/types/modules/admin/user";
 import { IUser } from "@/types/shared";
 import { IBreadcrumbItem } from "@/types/shared/navigation";
+import { format } from "date-fns";
 
 const breadcrumbs: IBreadcrumbItem[] = [
   {
@@ -48,8 +49,8 @@ export default function Users({ data }: UsersProps) {
       header: "Status",
       accessorKey: "is_active",
       enableSorting: true,
-      cell: (row: IUser) => (
-        <Badge variant={row.is_active ? "default" : "destructive"}>
+      cell: (row) => (
+        <Badge variant={row.is_active ? "success" : "destructive"}>
           {row.is_active ? "Active" : "Inactive"}
         </Badge>
       ),
@@ -58,7 +59,7 @@ export default function Users({ data }: UsersProps) {
       id: "created_at",
       header: "Created At",
       accessorKey: "created_at",
-      cell: (row: IUser) => new Date(row.created_at).toLocaleDateString(),
+      cell: (row) => format(row.created_at, "dd MMM yyyy"),
     },
   ];
 

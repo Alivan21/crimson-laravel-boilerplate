@@ -15,13 +15,13 @@ import { cn } from "@/libs/clsx";
 import { type ISharedData } from "@/types/shared";
 import { type IBreadcrumbItem, type INavItem } from "@/types/shared/navigation";
 import { Head, Link, usePage } from "@inertiajs/react";
-import { Bell } from "lucide-react";
+import { Bell, ChevronLeft } from "lucide-react";
 import { type PropsWithChildren, type ReactNode } from "react";
 
 type AppHeaderLayoutProps = PropsWithChildren<{
   breadcrumbs?: IBreadcrumbItem[];
   title: string;
-  backButton?: ReactNode;
+  onBack?: () => void;
   topActions?: ReactNode;
   description?: string;
   showHeader?: boolean;
@@ -33,7 +33,7 @@ export default function AppHeaderLayout({
   children,
   breadcrumbs = [],
   title,
-  backButton,
+  onBack,
   topActions,
   description,
   showHeader = true,
@@ -104,10 +104,20 @@ export default function AppHeaderLayout({
         )}
 
         {showHeader && (
-          <div className="flex flex-col gap-1 sm:gap-2">
+          <div className="flex flex-col gap-1 px-5 sm:gap-2 sm:px-2.5">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <header className="flex items-center gap-2">
-                {backButton && <div className="flex shrink-0">{backButton}</div>}
+                {onBack && (
+                  <Button
+                    aria-label="Go back"
+                    className="h-8 w-8 shrink-0"
+                    onClick={onBack}
+                    size="icon"
+                    variant="ghost"
+                  >
+                    <ChevronLeft className="size-5" />
+                  </Button>
+                )}
                 <h1 className="text-xl font-bold sm:text-2xl">{title}</h1>
               </header>
               {topActions && <div className="flex shrink-0">{topActions}</div>}

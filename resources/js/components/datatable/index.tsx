@@ -49,7 +49,6 @@ export function DataTable<TData extends { id?: string | number }>({
 }: DataTableProps<TData>) {
   const { url } = usePage();
 
-  // Memoize the base URL to prevent unnecessary recalculations
   const currentUrl = useMemo(() => url.split("?")[0], [url]);
 
   const { params, setParams } = useDebounceSearchParams(currentUrl, initialParams);

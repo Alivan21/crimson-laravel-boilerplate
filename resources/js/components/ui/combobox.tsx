@@ -217,11 +217,16 @@ function Combobox({
     }
   }, []);
 
-  const handleClear = useCallback(() => {
-    setSelected(undefined);
-    onChange?.(undefined);
-    setInputValue("");
-  }, [onChange]);
+  const handleClear = useCallback(
+    (e?: React.MouseEvent | React.KeyboardEvent) => {
+      e?.preventDefault();
+      e?.stopPropagation();
+      setSelected(undefined);
+      setInputValue("");
+      onChange?.(undefined);
+    },
+    [onChange],
+  );
 
   // Event listener effect
   useEffect(() => {
@@ -243,8 +248,11 @@ function Combobox({
   useEffect(() => {
     if (value !== undefined) {
       setSelected(value);
+    } else if (value === undefined && selected !== undefined) {
+      setSelected(undefined);
+      setInputValue("");
     }
-  }, [value]);
+  }, [value, selected]);
 
   // Handle manual options changes with memoized comparison
   useEffect(() => {
@@ -445,16 +453,10 @@ function Combobox({
                 "inline-flex h-4 w-4 cursor-pointer items-center justify-center p-0",
                 disabled && "hidden",
               )}
-              onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                handleClear();
-              }}
+              onClick={handleClear}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  handleClear();
+                  handleClear(e);
                 }
               }}
               role="button"

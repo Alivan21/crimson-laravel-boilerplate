@@ -1,5 +1,3 @@
-import { useCallback } from "react";
-
 import Combobox, { type TOption } from "@/components/ui/combobox";
 import { cn } from "@/libs/clsx";
 import { TDataTableParams } from "@/types/shared/response";
@@ -60,17 +58,10 @@ const SelectFilterItem = ({
   onChange: (value: string | undefined) => void;
   value: TOption | undefined;
 }) => {
-  const handleChange = useCallback(
-    (option: TOption | undefined) => {
-      onChange(option?.value);
-    },
-    [onChange],
-  );
-
   return (
     <Combobox
       className="w-full min-w-0"
-      onChange={handleChange}
+      onChange={(option) => onChange(option?.value)}
       options={column.options}
       placeholder={column.placeholder || `Filter by ${column.title}`}
       value={value}
@@ -90,21 +81,16 @@ const DatePickerFilterItem = ({
   onChange: (value: string | undefined) => void;
   value: Date | undefined;
 }) => {
-  const handleChange = useCallback(
-    (date: Date | undefined) => {
-      if (!date) {
-        onChange(undefined);
-        return;
-      }
-      onChange(formatDateValue(date, column.datePickerProps?.granularity));
-    },
-    [column.datePickerProps?.granularity, onChange],
-  );
-
   return (
     <DateTimePicker
       className="w-full min-w-0"
-      onChange={handleChange}
+      onChange={(date) => {
+        if (!date) {
+          onChange(undefined);
+          return;
+        }
+        onChange(formatDateValue(date, column.datePickerProps?.granularity));
+      }}
       placeholder={column.placeholder || `Filter by ${column.title}`}
       value={value}
       {...column.datePickerProps}
@@ -113,36 +99,39 @@ const DatePickerFilterItem = ({
 };
 
 export function DataTableFilter({ className, columns, params, setParams }: DataTableFilterProps) {
-  // Create a memoized change handler for each column
-  const createChangeHandler = useCallback(
-    (columnId: string) => (value: string | undefined) => {
-      setParams((prev) => ({
-        ...prev,
-        [columnId]: value,
-      }));
-    },
-    [setParams],
-  );
-
   return (
     <div className={cn("grid grid-cols-1 gap-2 md:grid-cols-2", className)}>
       {columns.map((column) => {
-        const onChange = createChangeHandler(column.id);
+        const handleChange = (value: string | undefined) => {
+          setParams((prev) => ({
+            ...prev,
+            [column.id]: value,
+          }));
+        };
 
         if (column.type === "select") {
-          const value = column.options?.find((option) => option.value === params[column.id]);
+          const value = params[column.id]
+            ? column.options?.find((option) => option.value === params[column.id])
+            : undefined;
+
           return (
-            <SelectFilterItem column={column} key={column.id} onChange={onChange} value={value} />
+            <SelectFilterItem
+              column={column}
+              key={column.id}
+              onChange={handleChange}
+              value={value}
+            />
           );
         }
 
         if (column.type === "datepicker") {
           const value = params[column.id] ? new Date(params[column.id] as string) : undefined;
+
           return (
             <DatePickerFilterItem
               column={column}
               key={column.id}
-              onChange={onChange}
+              onChange={handleChange}
               value={value}
             />
           );

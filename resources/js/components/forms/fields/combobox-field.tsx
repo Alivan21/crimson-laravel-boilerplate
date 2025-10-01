@@ -21,9 +21,10 @@ export function ComboboxField<T extends FieldValues>({
       control={control}
       name={name}
       render={({ field }) => {
-        const selectedOption = field.value
-          ? props.options?.find((option) => option.value === field.value)
-          : undefined;
+        const selectedOption =
+          field.value && props.options
+            ? props.options.find((option) => option.value === field.value)
+            : undefined;
 
         return (
           <FormItem>
@@ -31,7 +32,9 @@ export function ComboboxField<T extends FieldValues>({
             <FormControl>
               <Combobox
                 {...props}
-                onChange={(option) => field.onChange(option?.value)}
+                onChange={(option) => {
+                  field.onChange(option?.value ?? null);
+                }}
                 value={selectedOption}
               />
             </FormControl>

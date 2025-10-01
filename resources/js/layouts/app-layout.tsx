@@ -9,7 +9,7 @@ type AppLayoutProps = PropsWithChildren<{
   breadcrumbs?: IBreadcrumbItem[];
   title: string;
   topActions?: ReactNode;
-  backButton?: ReactNode;
+  onBack?: () => void;
   description?: string;
   showHeader?: boolean;
   className?: string;
