@@ -1,3 +1,7 @@
+import { Link, usePage } from "@inertiajs/react";
+import { ChevronRight } from "lucide-react";
+import { createElement, useCallback, useMemo, useState } from "react";
+
 import { isPathActive } from "@/common/utils/path-from-href";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
@@ -11,76 +15,73 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { type INavGroup, type INavItem } from "@/types/shared/navigation";
-import { Link, usePage } from "@inertiajs/react";
-import { ChevronRight } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useCollapsibleStates } from "./hooks/use-collapsible-state";
+import { useNavItemState } from "./hooks/use-nav-item-state";
 
 type NavMainProps = {
   items?: INavItem[];
   groups?: INavGroup[];
 };
 
-const STORAGE_KEY = "sidebar-collapsible-states";
+const NavItemContent = ({
+  icon,
+  title,
+}: {
+  icon?: React.ComponentType<{ className?: string }> | null;
+  title: string;
+}) => (
+  <>
+    {icon && createElement(icon)}
+    <span>{title}</span>
+  </>
+);
 
-const getSavedStates = (): Record<string, boolean> => {
-  try {
-    const saved = sessionStorage.getItem(STORAGE_KEY);
-    return saved ? (JSON.parse(saved) as Record<string, boolean>) : {};
-  } catch {
-    return {};
-  }
-};
+const NavSubItem = ({ subItem, currentUrl }: { subItem: INavItem; currentUrl: string }) => {
+  const isSubActive = useMemo(
+    () => (subItem.href ? isPathActive(subItem.href, currentUrl) : false),
+    [subItem.href, currentUrl],
+  );
 
-const saveCollapsibleState = (itemTitle: string, isOpen: boolean): void => {
-  try {
-    const savedStates = getSavedStates();
-    const updatedStates = { ...savedStates, [itemTitle]: isOpen };
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(updatedStates));
-  } catch {
-    // Silently fail if sessionStorage is not available
+  if (subItem.items && subItem.items.length > 0) {
+    return <NavItem item={subItem} />;
   }
+
+  if (subItem.href) {
+    return (
+      <SidebarMenuSubButton asChild isActive={isSubActive}>
+        <Link href={subItem.href} onClick={(e: React.MouseEvent) => e.stopPropagation()} prefetch>
+          <NavItemContent icon={subItem.icon} title={subItem.title} />
+        </Link>
+      </SidebarMenuSubButton>
+    );
+  }
+
+  return (
+    <SidebarMenuSubButton onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+      <NavItemContent icon={subItem.icon} title={subItem.title} />
+    </SidebarMenuSubButton>
+  );
 };
 
 function NavItem({ item }: { item: INavItem }) {
-  const page = usePage();
+  const { hasChildren, hasActiveChild, isActive } = useNavItemState(item);
+  const { getSavedStates, saveCollapsibleState } = useCollapsibleStates();
 
-  const hasChildren = useMemo(() => item.items && item.items.length > 0, [item.items]);
-  const hasActiveChild = useMemo(
-    () =>
-      item.items?.some((subItem) => (subItem.href ? isPathActive(subItem.href, page.url) : false)),
-    [item.items, page.url],
-  );
-  const isActive = useMemo(
-    () => (item.href ? isPathActive(item.href, page.url) : false) || hasActiveChild,
-    [item.href, page.url, hasActiveChild],
-  );
-
-  // Initialize state: check saved state OR auto-open if has active child
   const [isOpen, setIsOpen] = useState(() => {
     const savedStates = getSavedStates();
     if (savedStates[item.title] !== undefined) {
       return savedStates[item.title];
     }
-    // Compute hasActiveChild inline for initial state
-    return (
-      item.items?.some((subItem) =>
-        subItem.href ? isPathActive(subItem.href, page.url) : false,
-      ) ?? false
-    );
+    return hasActiveChild;
   });
 
-  // Auto-expand when navigating to a page with active child
-  useEffect(() => {
-    if (hasActiveChild && !isOpen) {
-      setIsOpen(true);
-      saveCollapsibleState(item.title, true);
-    }
-  }, [hasActiveChild, isOpen, item.title]);
-
-  const handleOpenChange = (open: boolean) => {
-    setIsOpen(open);
-    saveCollapsibleState(item.title, open);
-  };
+  const handleOpenChange = useCallback(
+    (open: boolean) => {
+      setIsOpen(open);
+      saveCollapsibleState(item.title, open);
+    },
+    [item.title, saveCollapsibleState],
+  );
 
   if (hasChildren) {
     return (
@@ -92,8 +93,7 @@ function NavItem({ item }: { item: INavItem }) {
               isActive={isActive}
               tooltip={{ children: item.title }}
             >
-              {item.icon && <item.icon />}
-              <span>{item.title}</span>
+              <NavItemContent icon={item.icon} title={item.title} />
               <ChevronRight
                 className={`ml-auto h-4 w-4 transition-transform duration-200 ${
                   isOpen ? "rotate-90" : ""
@@ -108,25 +108,7 @@ function NavItem({ item }: { item: INavItem }) {
             <SidebarMenuSub>
               {item.items?.map((subItem) => (
                 <SidebarMenuSubItem key={subItem.title}>
-                  {subItem.items && subItem.items.length > 0 ? (
-                    <NavItem item={subItem} />
-                  ) : subItem.href ? (
-                    <SidebarMenuSubButton asChild isActive={isPathActive(subItem.href, page.url)}>
-                      <Link
-                        href={subItem.href}
-                        onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                        prefetch
-                      >
-                        {subItem.icon && <subItem.icon />}
-                        <span>{subItem.title}</span>
-                      </Link>
-                    </SidebarMenuSubButton>
-                  ) : (
-                    <SidebarMenuSubButton onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-                      {subItem.icon && <subItem.icon />}
-                      <span>{subItem.title}</span>
-                    </SidebarMenuSubButton>
-                  )}
+                  <NavSubItem currentUrl={usePage().url} subItem={subItem} />
                 </SidebarMenuSubItem>
               ))}
             </SidebarMenuSub>
@@ -141,19 +123,28 @@ function NavItem({ item }: { item: INavItem }) {
       {item.href ? (
         <SidebarMenuButton asChild isActive={isActive} tooltip={{ children: item.title }}>
           <Link href={item.href} prefetch>
-            {item.icon && <item.icon />}
-            <span>{item.title}</span>
+            <NavItemContent icon={item.icon} title={item.title} />
           </Link>
         </SidebarMenuButton>
       ) : (
         <SidebarMenuButton tooltip={{ children: item.title }}>
-          {item.icon && <item.icon />}
-          <span>{item.title}</span>
+          <NavItemContent icon={item.icon} title={item.title} />
         </SidebarMenuButton>
       )}
     </SidebarMenuItem>
   );
 }
+
+const NavigationGroup = ({ group }: { group: INavGroup }) => (
+  <SidebarGroup className="px-2 py-0">
+    {(group.showLabel ?? true) && <SidebarGroupLabel>{group.group}</SidebarGroupLabel>}
+    <SidebarMenu>
+      {group.items.map((item) => (
+        <NavItem item={item} key={item.title} />
+      ))}
+    </SidebarMenu>
+  </SidebarGroup>
+);
 
 export function NavMain({ items = [], groups = [] }: NavMainProps) {
   const navigationGroups = useMemo(() => {
@@ -162,20 +153,11 @@ export function NavMain({ items = [], groups = [] }: NavMainProps) {
     return [];
   }, [groups, items]);
 
-  if (navigationGroups.length === 0) return null;
+  const renderContent = useMemo(() => {
+    if (navigationGroups.length === 0) return null;
 
-  return (
-    <>
-      {navigationGroups.map((group) => (
-        <SidebarGroup className="px-2 py-0" key={group.group}>
-          {(group.showLabel ?? true) && <SidebarGroupLabel>{group.group}</SidebarGroupLabel>}
-          <SidebarMenu>
-            {group.items.map((item) => (
-              <NavItem item={item} key={item.title} />
-            ))}
-          </SidebarMenu>
-        </SidebarGroup>
-      ))}
-    </>
-  );
+    return navigationGroups.map((group) => <NavigationGroup group={group} key={group.group} />);
+  }, [navigationGroups]);
+
+  return <>{renderContent}</>;
 }
